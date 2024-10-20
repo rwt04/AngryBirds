@@ -1,6 +1,7 @@
 package com.badlogic.angrybirds.Scenes;
 
 import com.badlogic.angrybirds.AngryBirds;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -26,8 +27,8 @@ public class Hud {
         table.top();
         table.setFillParent(true);
 
-        scoreLabel = new Label(String.format("%06d", score), new Label.LabelStyle(new BitmapFont(), com.badlogic.gdx.graphics.Color.WHITE));
-        table.add(scoreLabel).expandX().padTop(10);
+        scoreLabel = new Label(String.format("SCORE : %06d", score), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
+        table.add(scoreLabel).expandX().padTop(10).padLeft(1100);
 
         stage.addActor(table);
     }

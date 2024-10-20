@@ -34,6 +34,9 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+        game.batch.begin();
+        game.batch.draw(playBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+        game.batch.end();
 
         hud.stage.draw();
     }
