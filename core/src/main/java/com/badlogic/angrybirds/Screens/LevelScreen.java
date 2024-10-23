@@ -29,7 +29,7 @@ public class LevelScreen implements Screen {
 
     public LevelScreen(AngryBirds game) {
         this.game = game;
-        levelBG = new Texture("menuBG.jpg");
+        levelBG = new Texture("backgrounds/menuBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);

@@ -19,7 +19,7 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(AngryBirds game) {
         this.game = game;
-        playBG = new Texture("playBG.jpg");
+        playBG = new Texture("backgrounds/playBG.jpg");
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, gamecam);
         hud = new Hud(game.batch, game);

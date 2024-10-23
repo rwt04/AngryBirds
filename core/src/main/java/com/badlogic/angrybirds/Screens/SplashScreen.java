@@ -18,7 +18,7 @@ public class SplashScreen implements Screen {
 
     public SplashScreen(AngryBirds game) {
         this.game = game;
-        splashBG = new Texture("splashBG.jpg");
+        splashBG = new Texture("backgrounds/splashBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);

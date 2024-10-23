@@ -26,7 +26,7 @@ public class PauseScreen implements Screen {
 
     public PauseScreen(AngryBirds game) {
         this.game = game;
-        pauseBG = new Texture("playBG.jpg");
+        pauseBG = new Texture("backgrounds/playBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);

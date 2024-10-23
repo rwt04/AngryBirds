@@ -29,7 +29,7 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(AngryBirds game) {
         this.game = game;
-        menuBG = new Texture("menuBG.jpg");
+        menuBG = new Texture("backgrounds/menuBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
