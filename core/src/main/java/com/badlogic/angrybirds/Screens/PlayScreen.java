@@ -1,6 +1,6 @@
 package com.badlogic.angrybirds.Screens;
 
-import com.badlogic.angrybirds.AngryBirds;
+import com.badlogic.angrybirds.*;
 import com.badlogic.angrybirds.Scenes.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -35,9 +35,13 @@ public class PlayScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
+
         game.batch.begin();
+
         game.batch.draw(playBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+
         game.batch.end();
+
 
         hud.stage.act(delta);
         hud.stage.draw();

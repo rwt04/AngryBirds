@@ -27,7 +27,7 @@ public class Lwjgl3Launcher {
         //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
-        configuration.setWindowedMode(1280, 720);
+        configuration.setWindowedMode(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         configuration.setWindowIcon("AngryRedbird-128x128.png", "AngryRedbird-64x64.png", "AngryRedbird-32x32.png", "AngryRedbird-16x16.png");
         return configuration;
