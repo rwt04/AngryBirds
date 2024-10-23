@@ -1,9 +1,8 @@
-// MainMenuScreen.java
 package com.badlogic.angrybirds.Screens;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.angrybirds.AngryBirds;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,20 +15,21 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen implements Screen {
+public class LevelScreen implements Screen {
+
     private AngryBirds game;
-    Texture menuBG;
+    Texture levelBG;
     OrthographicCamera camera;
     Viewport viewport;
 
     private Stage stage;
     private Skin skin;
     private Table table;
-    private TextButton playButton, exitButton;
+    private TextButton level1Button, level2Button, level3Button;
 
-    public MainMenuScreen(AngryBirds game) {
+    public LevelScreen(AngryBirds game) {
         this.game = game;
-        menuBG = new Texture("menuBG.jpg");
+        levelBG = new Texture("menuBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
@@ -42,30 +42,41 @@ public class MainMenuScreen implements Screen {
     public void show() {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
-        playButton = new TextButton("Play", skin, "default");
-        exitButton = new TextButton("Exit", skin, "default");
+        level1Button = new TextButton("Level 1", skin, "default");
+        level2Button = new TextButton("Level 2", skin, "default");
+        level3Button = new TextButton("Level 3", skin, "default");
 
-        playButton.addListener(new ClickListener() {
+        level1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LevelScreen(game));
+                game.setScreen(new PlayScreen(game));
                 dispose();
             }
         });
 
-        exitButton.addListener(new ClickListener() {
+        level2Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
+                game.setScreen(new PlayScreen(game));
+                dispose();
+            }
+        });
+
+        level3Button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PlayScreen(game));
+                dispose();
             }
         });
 
         table = new Table();
-        table.center();
+        table.top();
         table.setFillParent(true);
-        table.add(playButton).padTop(10);
-        table.row();
-        table.add(exitButton).padTop(10);
+
+        table.add(level1Button).expandX().padTop(360).padLeft(110);
+        table.add(level2Button).expandX().padTop(360);
+        table.add(level3Button).expandX().padTop(360).padRight(110);
 
         stage.addActor(table);
     }
@@ -77,7 +88,9 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.batch.draw(menuBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+
+        game.batch.draw(levelBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+
         game.batch.end();
 
         stage.act();

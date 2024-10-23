@@ -7,7 +7,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.utils.viewport.*;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PlayScreen implements Screen {
     private AngryBirds game;
@@ -21,12 +22,12 @@ public class PlayScreen implements Screen {
         playBG = new Texture("playBG.jpg");
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, gamecam);
-        hud = new Hud(game.batch);
+        hud = new Hud(game.batch, game);
     }
 
     @Override
     public void show() {
-
+        Gdx.input.setInputProcessor(hud.stage);
     }
 
     @Override
@@ -38,31 +39,29 @@ public class PlayScreen implements Screen {
         game.batch.draw(playBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
         game.batch.end();
 
+        hud.stage.act(delta);
         hud.stage.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         gamePort.update(width, height, true);
+        hud.resize(width, height);
     }
 
     @Override
     public void pause() {
-
     }
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-
     }
 
     @Override
     public void dispose() {
-
     }
 }

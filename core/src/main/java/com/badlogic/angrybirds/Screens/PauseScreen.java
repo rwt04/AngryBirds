@@ -1,8 +1,8 @@
-// MainMenuScreen.java
 package com.badlogic.angrybirds.Screens;
 
 import com.badlogic.angrybirds.AngryBirds;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,58 +16,46 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen implements Screen {
+public class PauseScreen implements Screen {
     private AngryBirds game;
-    Texture menuBG;
-    OrthographicCamera camera;
-    Viewport viewport;
-
+    private Texture pauseBG;
+    private OrthographicCamera camera;
+    private Viewport viewport;
     private Stage stage;
     private Skin skin;
-    private Table table;
-    private TextButton playButton, exitButton;
 
-    public MainMenuScreen(AngryBirds game) {
+    public PauseScreen(AngryBirds game) {
         this.game = game;
-        menuBG = new Texture("menuBG.jpg");
+        pauseBG = new Texture("playBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
         camera.setToOrtho(false, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
         stage = new Stage(viewport, game.batch);
 
-        Gdx.input.setInputProcessor(stage);
+        // Load skin for TextButtons
+        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
+
+        // Create TextButtons
+        TextButton resumeButton = new TextButton("Resume", skin);
+        TextButton restartButton = new TextButton("Restart", skin);
+        TextButton exitButton = new TextButton("Exit", skin);
+
+        // Position buttons using a Table
+        Table table = new Table();
+        table.center();
+        table.setFillParent(true);
+        table.add(resumeButton).padBottom(20);
+        table.row();
+        table.add(restartButton).padBottom(20);
+        table.row();
+        table.add(exitButton);
+
+        stage.addActor(table);
     }
 
     @Override
     public void show() {
-        skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-
-        playButton = new TextButton("Play", skin, "default");
-        exitButton = new TextButton("Exit", skin, "default");
-
-        playButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new LevelScreen(game));
-                dispose();
-            }
-        });
-
-        exitButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.exit();
-            }
-        });
-
-        table = new Table();
-        table.center();
-        table.setFillParent(true);
-        table.add(playButton).padTop(10);
-        table.row();
-        table.add(exitButton).padTop(10);
-
-        stage.addActor(table);
+        Gdx.input.setInputProcessor(stage);
     }
 
     @Override
@@ -77,10 +65,18 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
-        game.batch.draw(menuBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+        game.batch.draw(pauseBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+        game.batch.setColor(0, 0, 0, 0.5f);
+        game.batch.draw(pauseBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+        game.batch.setColor(1, 1, 1, 1);
         game.batch.end();
 
-        stage.act();
+        // TODO remove this and implement button actions instead
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new PlayScreen(game));
+        }
+
+        stage.act(delta);
         stage.draw();
     }
 
@@ -103,5 +99,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void dispose() {
+        pauseBG.dispose();
+        stage.dispose();
+        skin.dispose();
     }
 }
