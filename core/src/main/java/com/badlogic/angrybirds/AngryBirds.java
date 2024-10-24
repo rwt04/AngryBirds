@@ -38,6 +38,9 @@ public class AngryBirds extends Game {
             setScreen(new LevelScreen(this));
         }else if(Gdx.input.isKeyPressed(Input.Keys.S)){
             setScreen(new SplashScreen(this));
+        }else if(Gdx.input.isKeyPressed(Input.Keys.V)){
+            setScreen(new SavedGameScreen(this));
+
         }
     }
 

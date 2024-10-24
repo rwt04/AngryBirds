@@ -39,19 +39,33 @@ public class PauseScreen implements Screen {
         // Create TextButtons
         TextButton resumeButton = new TextButton("Resume", skin);
         TextButton restartButton = new TextButton("Restart", skin);
-        TextButton exitButton = new TextButton("Exit", skin);
+        TextButton saveExitButton = new TextButton("Save & Exit", skin);
+        TextButton mainMenuButton = new TextButton("Exit To Menu", skin);
 
         // Position buttons using a Table
         Table table = new Table();
         table.center();
         table.setFillParent(true);
-        table.add(resumeButton).padBottom(20);
+
+        float buttonWidth = 500f;
+
+        table.add(resumeButton).width(buttonWidth).padBottom(20);
         table.row();
-        table.add(restartButton).padBottom(20);
+        table.add(restartButton).width(buttonWidth).padBottom(20);
         table.row();
-        table.add(exitButton);
+        table.add(saveExitButton).width(buttonWidth).padBottom(20);
+        table.row();
+        table.add(mainMenuButton).width(buttonWidth);
 
         stage.addActor(table);
+
+        mainMenuButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
+        });
     }
 
     @Override

@@ -25,7 +25,7 @@ public class MainMenuScreen implements Screen {
     private Stage stage;
     private Skin skin;
     private Table table;
-    private TextButton playButton, exitButton;
+    private TextButton playButton, exitButton, loadButton;
 
     public MainMenuScreen(AngryBirds game) {
         this.game = game;
@@ -42,13 +42,23 @@ public class MainMenuScreen implements Screen {
     public void show() {
         skin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
 
-        playButton = new TextButton("Play", skin, "default");
+        playButton = new TextButton("New Game", skin, "default");
+        loadButton = new TextButton("Load Game", skin, "default");
         exitButton = new TextButton("Exit", skin, "default");
+
 
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new LevelScreen(game));
+                dispose();
+            }
+        });
+
+        loadButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new SavedGameScreen(game));
                 dispose();
             }
         });
@@ -63,9 +73,14 @@ public class MainMenuScreen implements Screen {
         table = new Table();
         table.center();
         table.setFillParent(true);
-        table.add(playButton).padTop(10);
+
+        float buttonWidth = 400f;
+
+        table.add(playButton).width(buttonWidth).padBottom(20);
         table.row();
-        table.add(exitButton).padTop(10);
+        table.add(loadButton).width(buttonWidth).padBottom(20);
+        table.row();
+        table.add(exitButton).width(buttonWidth);
 
         stage.addActor(table);
     }
