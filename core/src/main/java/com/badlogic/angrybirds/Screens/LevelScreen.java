@@ -1,5 +1,6 @@
 package com.badlogic.angrybirds.Screens;
 
+import com.badlogic.angrybirds.Level;
 import com.badlogic.gdx.Screen;
 import com.badlogic.angrybirds.AngryBirds;
 import com.badlogic.gdx.Gdx;
@@ -49,7 +50,7 @@ public class LevelScreen implements Screen {
         level1Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new PlayScreen(game, new Level(1)));
                 dispose();
             }
         });
@@ -57,7 +58,7 @@ public class LevelScreen implements Screen {
         level2Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new PlayScreen(game, new Level(2)));
                 dispose();
             }
         });
@@ -65,7 +66,7 @@ public class LevelScreen implements Screen {
         level3Button.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen(game));
+                game.setScreen(new PlayScreen(game, new Level(3)));
                 dispose();
             }
         });

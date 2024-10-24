@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GlassBlock extends Block {
-    public GlassBlock(float x, float y, String shapeType) {
-        super(getTexture(shapeType), x, y);
+    public GlassBlock(float x, float y, String shapeType, float orientation) {
+        super(getTexture(shapeType), x, y, orientation);
     }
 
     private static Texture getTexture(String shapeType) {

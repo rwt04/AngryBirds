@@ -1,6 +1,7 @@
 package com.badlogic.angrybirds.Screens;
 
 import com.badlogic.angrybirds.AngryBirds;
+import com.badlogic.angrybirds.Level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -73,7 +74,7 @@ public class PauseScreen implements Screen {
 
         // TODO remove this and implement button actions instead
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PlayScreen(game));
+            game.setScreen(new PlayScreen(game,new Level(1)));
         }
 
         stage.act(delta);
