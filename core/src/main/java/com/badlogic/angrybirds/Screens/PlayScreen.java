@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -18,6 +20,8 @@ public class PlayScreen implements Screen {
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     Hud hud;
+    private World world;
+    private Box2DDebugRenderer b2dr;
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -26,6 +30,9 @@ public class PlayScreen implements Screen {
         gamecam = new OrthographicCamera();
         gamePort = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, gamecam);
         hud = new Hud(game.batch, game);
+        world = new World(new Vector2(0, -10), true);
+        b2dr = new Box2DDebugRenderer();
+        createGround();
     }
 
     @Override
@@ -48,6 +55,8 @@ public class PlayScreen implements Screen {
 
         hud.stage.act(delta);
         hud.stage.draw();
+        world.step(1/60f, 6, 2);
+        b2dr.render(world, gamecam.combined);
     }
 
     @Override
@@ -92,5 +101,15 @@ public class PlayScreen implements Screen {
                 pig.getTexture().getWidth(), pig.getTexture().getHeight(),
                 1, 1, 0);
         }
+    }
+
+    public void createGround(){
+        BodyDef groundBodyDef = new BodyDef();
+        groundBodyDef.position.set(new Vector2(0, 10));
+        Body groundBody = world.createBody(groundBodyDef);
+        PolygonShape groundBox = new PolygonShape();
+        groundBox.setAsBox(gamecam.viewportWidth, 10.0f);
+        groundBody.createFixture(groundBox, 0.0f);
+        groundBox.dispose();
     }
 }
