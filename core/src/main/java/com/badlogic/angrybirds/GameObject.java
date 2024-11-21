@@ -13,22 +13,6 @@ public class GameObject {
         this.texture = texture;
         this.x = x;
         this.y = y;
-
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(5, 10);
-
-        World world = new World(new Vector2(0, -10), true);
-        Body body = world.createBody(bodyDef);
-        CircleShape circle = new CircleShape();
-        circle.setRadius(6f);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
-        Fixture fixture = body.createFixture(fixtureDef);
-        circle.dispose();
     }
 
     public Texture getTexture() {

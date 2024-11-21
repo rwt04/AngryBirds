@@ -12,7 +12,7 @@ public class Level {
     private List<Pig> pigs = new ArrayList<Pig>();
 
     public Level(int level){
-        catapult = new Catapult(260, 85.4f);
+        catapult = new Catapult(260, AngryBirds.V_HEIGHT*0.137777f - 38.6f);
         createLevel(level);
     }
 
