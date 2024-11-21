@@ -7,10 +7,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -27,6 +30,8 @@ public class PlayScreen implements Screen {
     private final int VELOCITY_ITERATIONS = 8;
     private final int POSITION_ITERATIONS = 3;
     private Body mybox;
+    private Sprite boxSprite;
+    private Array<Body> tempBodies = new Array<Body>();
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -101,12 +106,23 @@ public class PlayScreen implements Screen {
         drawGameObjects();
         game.batch.end();
 
-        b2dr.render(world, gamecam.combined);
-
         hud.stage.act(delta);
         hud.stage.draw();
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        game.batch.begin();
+        world.getBodies(tempBodies);
+        for (Body body : tempBodies) {
+            if (body.getUserData() != null && body.getUserData() instanceof Sprite) {
+                Sprite sprite = (Sprite) body.getUserData();
+                sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - boxSprite.getHeight() / 2);
+                sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+                sprite.draw(game.batch);
+            }
+        }
+        game.batch.end();
+
+        b2dr.render(world, gamecam.combined);
     }
 
     @Override
