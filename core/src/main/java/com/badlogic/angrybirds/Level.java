@@ -1,5 +1,7 @@
 package com.badlogic.angrybirds;
 
+import com.badlogic.angrybirds.Screens.PlayScreen;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ public class Level {
     private List<Pig> pigs = new ArrayList<Pig>();
 
     public Level(int level){
-        catapult = new Catapult(260, AngryBirds.V_HEIGHT*0.137777f - 38.6f);
+        catapult = new Catapult(260, PlayScreen.GROUND_Y_PIXELS);
         createLevel(level);
     }
 
@@ -26,21 +28,21 @@ public class Level {
                 birds.add(new BlackBird(85, 125));
                 birds.add(new BlackBird(22, 125));
 
-                // blocks
-                blocks.add(new SteelBlock(860, 195, "medium", 90f)); // decrease x by width-height/2
-                blocks.add(new SteelBlock(1010, 195, "medium", 90f)); // increase y by width-height/2
-                blocks.add(new SteelBlock(1160, 195, "medium", 90f));
-                blocks.add(new SteelBlock(1350, 215, "long", 90f));
-                blocks.add(new WoodBlock(900, 286, "short", 0f));
-                blocks.add(new WoodBlock(1050, 286, "short", 0f));
-                blocks.add(new WoodBlock(1200, 286, "short", 0f));
-                blocks.add(new WoodBlock(1406, 327, "short", 0f));
+// blocks
+                blocks.add(new SteelBlock(688, PlayScreen.GROUND_Y_PIXELS, "medium", 90f)); // decrease x by width-height/2
+                blocks.add(new SteelBlock(808, PlayScreen.GROUND_Y_PIXELS, "medium", 90f)); // increase y by width-height/2
+                blocks.add(new SteelBlock(928, PlayScreen.GROUND_Y_PIXELS, "medium", 90f));
+                blocks.add(new SteelBlock(1080, PlayScreen.GROUND_Y_PIXELS, "long", 90f));
+                blocks.add(new WoodBlock(688, PlayScreen.GROUND_Y_PIXELS+178, "short", 0f));
+                blocks.add(new WoodBlock(808, PlayScreen.GROUND_Y_PIXELS+178, "short", 0f));
+                blocks.add(new WoodBlock(928, PlayScreen.GROUND_Y_PIXELS+178, "short", 0f));
+                blocks.add(new WoodBlock(1080, PlayScreen.GROUND_Y_PIXELS+218, "short", 0f));
 
-                // pigs
-                pigs.add((new SmallPig(918.5f, 312)));
-                pigs.add((new SmallPig(1068.5f, 312)));
-                pigs.add((new SmallPig(1218.5f, 312)));
-                pigs.add((new SmallPig(1424.5f, 352)));
+// pigs
+                pigs.add(new SmallPig(688, PlayScreen.GROUND_Y_PIXELS+208));
+                pigs.add(new SmallPig(808, PlayScreen.GROUND_Y_PIXELS+208));
+                pigs.add(new SmallPig(928, PlayScreen.GROUND_Y_PIXELS+208));
+                pigs.add(new SmallPig(1080, PlayScreen.GROUND_Y_PIXELS+249));
     }}
 
     public Catapult getCatapult(){

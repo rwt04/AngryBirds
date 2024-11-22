@@ -8,16 +8,23 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+// todo: CATAPULT MECHANISM
+//  place and launch birds
+
 public class PlayScreen implements Screen {
+    public final static float GROUND_Y_PIXELS = AngryBirds.V_HEIGHT*0.137777f;
+
+    private final float TIME_STEP = 1/144f;
+    private final int VELOCITY_ITERATIONS = 8;
+    private final int POSITION_ITERATIONS = 3;
+
     private AngryBirds game;
     private Level level;
     Texture playBG;
@@ -26,12 +33,10 @@ public class PlayScreen implements Screen {
     Hud hud;
     private World world;
     private Box2DDebugRenderer b2dr;
-    private final float TIME_STEP = 1/144f;
-    private final int VELOCITY_ITERATIONS = 8;
-    private final int POSITION_ITERATIONS = 3;
-    private Body mybox;
-    private Sprite boxSprite;
-    private Array<Body> tempBodies = new Array<Body>();
+    private Array<Body> worldBodies = new Array<Body>();
+
+    private DrawBody drawBody;
+
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -42,55 +47,18 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch, game);
         world = new World(new Vector2(0, -10f), true);
         b2dr = new Box2DDebugRenderer();
-        createGround();
+        drawBody = new DrawBody(world, b2dr);
     }
-
-    // TODO: remove all the body renders from this class.
-    //  put in their respective object classes
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(hud.stage);
 
-        // body definition
-        BodyDef bdef = new BodyDef();
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        bdef.position.set(32,40);
+        // Create ground
+        createGround();
 
-        // shape definition
-        CircleShape shape = new CircleShape();
-        shape.setRadius(1);
-
-        // fixture definition
-        FixtureDef fdef = new FixtureDef();
-        fdef.shape=shape;
-        fdef.density = 5.0f;
-        fdef.friction = 0.5f;
-        fdef.restitution = 0.1f;
-
-        world.createBody(bdef).createFixture(fdef);
-
-        shape.dispose();
-
-        // rectanglular shape
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        bdef.position.set(32, 55f);
-
-        PolygonShape shape2 = new PolygonShape();
-        shape2.setAsBox(3f, 1f);
-
-        // fixture definition
-        fdef.shape=shape2;
-        fdef.density = 5.0f;
-        fdef.friction = 0.5f;
-        fdef.restitution = 0.3f;
-
-        mybox = world.createBody(bdef);
-        mybox.createFixture(fdef);
-
-        shape2.dispose();
-
-        mybox.applyAngularImpulse(100, true);
+        // Create game objects
+        createGameObjects();
     }
 
     @Override
@@ -110,19 +78,13 @@ public class PlayScreen implements Screen {
         hud.stage.draw();
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-        game.batch.begin();
-        world.getBodies(tempBodies);
-        for (Body body : tempBodies) {
-            if (body.getUserData() != null && body.getUserData() instanceof Sprite) {
-                Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition(body.getPosition().x - sprite.getWidth() / 2, body.getPosition().y - boxSprite.getHeight() / 2);
-                sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-                sprite.draw(game.batch);
-            }
-        }
-        game.batch.end();
 
         b2dr.render(world, gamecam.combined);
+
+        if (!level.getBirds().isEmpty() && Gdx.input.justTouched()) {
+            Bird bird = level.getBirds().get(3);
+            launchBird(bird);
+        }
     }
 
     @Override
@@ -149,35 +111,59 @@ public class PlayScreen implements Screen {
         b2dr.dispose();
     }
 
-    private void drawGameObjects() {
-        Texture catapultTexture = level.getCatapult().getTexture();
-        game.batch.draw(new TextureRegion(catapultTexture), level.getCatapult().getX(), level.getCatapult().getY(), catapultTexture.getWidth() / 2, catapultTexture.getHeight() / 2, catapultTexture.getWidth(), catapultTexture.getHeight(), 0.6f, 0.6f, 0);
+    private void createGameObjects() {
+        // Create catapult
+        level.getCatapult().createBody(world, 0.6f, 0.6f);
+
+        // Create birds
         for (Bird bird : level.getBirds()) {
-            game.batch.draw(bird.getTexture(), bird.getX(), bird.getY());
+            bird.createBody(world, 0.7f, 0.7f);
         }
 
+        // Create pigs
+        for (Pig pig : level.getPigs()) {
+            pig.createBody(world, 0.7f, 0.7f);
+        }
+
+        // Create blocks
         for (Block block : level.getBlocks()) {
-            game.batch.draw(new TextureRegion(block.getTexture()), block.getX(), block.getY(),
-                block.getTexture().getWidth() / 2, block.getTexture().getHeight() / 2,
-                block.getTexture().getWidth(), block.getTexture().getHeight(),
-                1, 1, block.getOrientation());
+            block.createBody(world, 1f, 1f);
         }
+    }
 
-        for(Pig pig : level.getPigs()) {
-            game.batch.draw(new TextureRegion(pig.getTexture()), pig.getX(), pig.getY(),
-                pig.getTexture().getWidth() / 2, pig.getTexture().getHeight() / 2,
-                pig.getTexture().getWidth(), pig.getTexture().getHeight(),
-                1, 1, 0);
+    private void drawGameObjects() {
+        world.getBodies(worldBodies);
+
+        for (Body body : worldBodies) {
+            if (body.getUserData() != null && body.getUserData() instanceof Sprite) {
+                Sprite sprite = (Sprite) body.getUserData();
+                sprite.setPosition((body.getPosition().x * AngryBirds.PPM) - sprite.getWidth() / 2, (body.getPosition().y * AngryBirds.PPM) - sprite.getHeight() / 2);
+                sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
+                sprite.draw(game.batch);
+            }
+        }
+    }
+    private void launchBird(Bird bird) {
+        if (!bird.isLaunched()) {
+            // Apply an impulse to the bird's body
+            Vector2 launchForce = new Vector2(30f, 33f); // Adjust the force as needed
+            bird.getBody().applyLinearImpulse(launchForce, bird.getBody().getWorldCenter(), true);
+            bird.setLaunched(true);
         }
     }
 
     private void createGround() {
         BodyDef groundBodyDef = new BodyDef();
         groundBodyDef.type = BodyDef.BodyType.StaticBody;
-        groundBodyDef.position.set(new Vector2(0, 2.5f));
+        groundBodyDef.position.set(new Vector2(0, GROUND_Y_PIXELS / AngryBirds.PPM));
 
         ChainShape groundShape = new ChainShape();
-        groundShape.createChain(new Vector2[]{new Vector2(0, 2.5f), new Vector2(AngryBirds.V_WIDTH, 2.5f)});
+        groundShape.createChain(new Vector2[]{
+            new Vector2(0, 0),
+            new Vector2(AngryBirds.V_WIDTH / AngryBirds.PPM, 0)
+        });
+        System.out.println("Ground position: " + groundBodyDef.position.x + " " + groundBodyDef.position.y);
+        System.out.println("width: " + AngryBirds.V_WIDTH / AngryBirds.PPM + " height: " + AngryBirds.V_HEIGHT / AngryBirds.PPM); ;
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
@@ -188,4 +174,6 @@ public class PlayScreen implements Screen {
 
         groundShape.dispose();
     }
+
+
 }

@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class AngryBirds extends Game {
     public static final int V_WIDTH = 1280;
     public static final int V_HEIGHT = 720;
-    public static final float PPM = 20;
+    public static final float PPM = 50;
 
     public SpriteBatch batch;
     public BitmapFont font;
