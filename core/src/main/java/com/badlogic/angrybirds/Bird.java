@@ -12,6 +12,7 @@ public class Bird extends GameObject {
     Body body;
     private boolean launched = false;
 
+
     public Bird(Texture texture, float x, float y) {
         super(texture, x, y);
     }
@@ -33,6 +34,8 @@ public class Bird extends GameObject {
         fdef.density = 5.0f;
         fdef.friction = 0.5f;
         fdef.restitution = 0.1f;
+//        fdef.filter.categoryBits = CATEGORY_DEFAULT;
+//        fdef.filter.maskBits = ~CATEGORY_CATAPULT;
 
         // create body
         body = world.createBody(bdef);

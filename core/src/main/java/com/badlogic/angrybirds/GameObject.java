@@ -7,7 +7,9 @@ import com.badlogic.gdx.physics.box2d.*;
 // class for game objects like birds, pigs, blocks, etc.
 public class GameObject {
     private Texture texture;
-    private float x, y;
+    private float x, y;// 1
+//    public static final short CATEGORY_CATAPULT = 0x0002; // 2
+//    public static final short CATEGORY_DEFAULT = 0x0004; // 4 (for other objects)
 
     public GameObject(Texture texture, float x, float y) {
         this.texture = texture;

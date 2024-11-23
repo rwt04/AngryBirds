@@ -31,6 +31,8 @@ public class Pig extends GameObject {
         fdef.density = 5.0f;
         fdef.friction = 0.5f;
         fdef.restitution = 0.1f;
+//        fdef.filter.categoryBits = CATEGORY_DEFAULT;
+//        fdef.filter.maskBits = ~CATEGORY_CATAPULT;
 
         // create body
         Body body = world.createBody(bdef);

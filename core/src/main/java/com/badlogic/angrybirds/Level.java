@@ -26,7 +26,6 @@ public class Level {
                 birds.add(new RedBird(210, 125));
                 birds.add(new YellowBird(148, 125));
                 birds.add(new BlackBird(85, 125));
-                birds.add(new BlackBird(22, 125));
 
 // blocks
                 blocks.add(new SteelBlock(688, PlayScreen.GROUND_Y_PIXELS, "medium", 90f)); // decrease x by width-height/2

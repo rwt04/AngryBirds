@@ -10,6 +10,7 @@ public class Catapult extends GameObject {
 
     Body body;
 
+
     public Catapult(float x, float y) {
         super(new Texture(Gdx.files.internal("gameObjects/catapult.png")), x, y);
     }
@@ -31,6 +32,8 @@ public class Catapult extends GameObject {
         fdef.density = 5.0f;
         fdef.friction = 0.5f;
         fdef.restitution = 0.1f;
+//        fdef.filter.categoryBits = CATEGORY_CATAPULT;
+//        fdef.filter.maskBits = ~CATEGORY_DEFAULT;
 
         // create body
         body = world.createBody(bdef);
