@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -17,6 +18,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class PlayScreen implements Screen {
     public final static float GROUND_Y_PIXELS = AngryBirds.V_HEIGHT * 0.137777f;
+
+    private int score = 0;
 
     private final float TIME_STEP = 1 / 144f;
     private final int VELOCITY_ITERATIONS = 8;
@@ -39,8 +42,7 @@ public class PlayScreen implements Screen {
     private Vector2 initialTouch = new Vector2();
     private Vector2 maxDragDistance = new Vector2(100, 100); // Adjust as needed
 
-    private float delayTime = 0f;
-    private final float BIRD_SETUP_DELAY = 4f; // Adjust this value to set the delay time in seconds
+    private CollisionListener collisionListener;
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -52,6 +54,8 @@ public class PlayScreen implements Screen {
         world = new World(new Vector2(0, -10f), true);
         b2dr = new Box2DDebugRenderer();
         drawBody = new DrawBody(world, b2dr);
+        collisionListener = new CollisionListener(hud);
+        world.setContactListener(collisionListener);
     }
 
     @Override
@@ -68,7 +72,6 @@ public class PlayScreen implements Screen {
         setupNextBird();
     }
 
-
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -78,6 +81,15 @@ public class PlayScreen implements Screen {
 
         game.batch.begin();
         game.batch.draw(playBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
+
+        // Draw the catapult
+        Catapult catapult = level.getCatapult();
+        Sprite sprite = new Sprite(catapult.getTexture());
+        sprite.setSize(catapult.getTexture().getWidth() * 0.6f, catapult.getTexture().getHeight() * 0.6f);
+        sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+        sprite.setPosition(catapult.getX(), catapult.getY());
+        sprite.draw(game.batch);
+
         drawGameObjects();
         game.batch.end();
 
@@ -88,17 +100,17 @@ public class PlayScreen implements Screen {
 
         b2dr.render(world, gamecam.combined);
 
-        // Decrement delay time and set up the next bird if delay has elapsed
-        if (delayTime > 0) {
-            delayTime -= delta;
-            if (delayTime <= 0) {
-                setupNextBird();
-            }
+        // Check and remove birds that have stopped moving or gone out of the screen
+        if (currentBird != null && currentBird.isLaunched() && (hasBirdStopped(currentBird) || isBirdOutOfScreen(currentBird))) {
+            world.destroyBody(currentBird.getBody());
+            currentBird = null;
+            isBirdOnCatapult = false;
+            setupNextBird();
         }
 
         handleInput();
+        handleCollisions();
     }
-
 
     @Override
     public void resize(int width, int height) {
@@ -125,14 +137,6 @@ public class PlayScreen implements Screen {
     }
 
     private void createGameObjects() {
-        // Create catapult
-        level.getCatapult().createBody(world, 0.6f, 0.6f);
-
-        // Create birds
-        for (Bird bird : level.getBirds()) {
-            bird.createBody(world, 0.7f, 0.7f);
-        }
-
         // Create pigs
         for (Pig pig : level.getPigs()) {
             pig.createBody(world, 0.7f, 0.7f);
@@ -148,37 +152,60 @@ public class PlayScreen implements Screen {
         world.getBodies(worldBodies);
 
         for (Body body : worldBodies) {
-            if (body.getUserData() != null && body.getUserData() instanceof Sprite) {
-                Sprite sprite = (Sprite) body.getUserData();
-                sprite.setPosition((body.getPosition().x * AngryBirds.PPM) - sprite.getWidth() / 2, (body.getPosition().y * AngryBirds.PPM) - sprite.getHeight() / 2);
+            if (body.getUserData() != null){
+                Sprite sprite = null;
+                if(body.getUserData() instanceof Bird){
+                    Bird bird = (Bird) body.getUserData();
+                    sprite = bird.getSprite();
+                } else if (body.getUserData() instanceof Block){
+                    Block block = (Block) body.getUserData();
+                    sprite = block.getSprite();
+                } else if (body.getUserData() instanceof Pig){
+                    Pig pig = (Pig) body.getUserData();
+                    sprite = pig.getSprite();
+                }
+                sprite.setPosition(body.getPosition().x * AngryBirds.PPM - sprite.getWidth() / 2,
+                    body.getPosition().y * AngryBirds.PPM - sprite.getHeight() / 2);
                 sprite.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
                 sprite.draw(game.batch);
             }
+        }
+
+        // Draw birds that are not on the catapult below the ground
+        float birdYPosition = GROUND_Y_PIXELS - 50; // Adjust this value to set the position below the ground
+        for (Bird bird : level.getBirds()) {
+            Sprite sprite = new Sprite(bird.getTexture());
+            sprite.setSize(bird.getTexture().getWidth() * 0.7f, bird.getTexture().getHeight() * 0.7f);
+            sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
+            sprite.setPosition(50 + level.getBirds().indexOf(bird) * 50, birdYPosition); // Adjust the x position as needed
+            sprite.draw(game.batch);
         }
     }
 
     private void handleInput() {
         if (currentBird != null && !currentBird.isLaunched()) {
             if (Gdx.input.isTouched()) {
-                if (!isDragging) {
-                    initialTouch.set(Gdx.input.getX(), Gdx.input.getY());
-                    isDragging = true;
+                Vector3 touchPos3D = new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0);
+                gamecam.unproject(touchPos3D);
+                Vector2 touchPos = new Vector2(touchPos3D.x, touchPos3D.y);
 
-                    // Disable collision with catapult while dragging
-                    Filter filter = currentBird.getBody().getFixtureList().first().getFilterData();
-                    filter.maskBits = Constants.MASK_BIRD & ~Constants.CATEGORY_CATAPULT;
-                    currentBird.getBody().getFixtureList().first().setFilterData(filter);
+                if (!isDragging) {
+                    // Check if the touch position is within the bird's body bounds
+                    if (currentBird.getBody().getFixtureList().first().testPoint(touchPos)) {
+                        initialTouch.set(Gdx.input.getX(), Gdx.input.getY());
+                        isDragging = true;
+                    }
                 } else {
                     Vector2 currentTouch = new Vector2(Gdx.input.getX(), Gdx.input.getY());
                     Vector2 dragDistance = currentTouch.sub(initialTouch);
                     dragDistance.x = -dragDistance.x; // Invert the x-axis movement
 
                     // Scale the drag distance
-                    float dragScaleFactor = 0.05f; // Adjust this value to scale the speed
+                    float dragScaleFactor = 0.025f; // Adjust this value to scale the speed
                     dragDistance.scl(dragScaleFactor);
 
                     // Limit the drag distance
-                    float maxDragLength = 2.5f; // Adjust this value to set the maximum drag length
+                    float maxDragLength = 1.2f; // Adjust this value to set the maximum drag length
                     if (dragDistance.len() > maxDragLength) {
                         dragDistance.setLength(maxDragLength);
                     }
@@ -188,34 +215,61 @@ public class PlayScreen implements Screen {
                 }
             } else if (isDragging) {
                 isDragging = false;
-                launchBird(currentBird);
+                Vector2 launchDirection = new Vector2(level.getCatapult().getX() / AngryBirds.PPM,
+                    level.getCatapult().getTexture().getHeight() / AngryBirds.PPM).sub(currentBird.getBody().getPosition());
+                currentBird.getBody().setType(BodyDef.BodyType.DynamicBody); // Set to KinematicBody
+                launchBird(currentBird, launchDirection);
                 isBirdOnCatapult = false;
-                delayTime = BIRD_SETUP_DELAY; // Start the delay timer
             }
         }
     }
 
-
     private void setupNextBird() {
-        if (!isBirdOnCatapult && delayTime <= 0 && !level.getBirds().isEmpty()) {
+        if (!isBirdOnCatapult && !level.getBirds().isEmpty()) {
             currentBird = level.getBirds().remove(0);
-            currentBird.getBody().setTransform(new Vector2(level.getCatapult().getX() / AngryBirds.PPM,
+            currentBird.createBody(world, 0.7f, 0.7f); // Create the bird body
+            currentBird.getBody().setType(BodyDef.BodyType.KinematicBody); // Set to KinematicBody
+            currentBird.getBody().setTransform(new Vector2(level.getCatapult().getX() / AngryBirds.PPM + 0.5f,
                 level.getCatapult().getTexture().getHeight() / AngryBirds.PPM), 0);
             isBirdOnCatapult = true;
         }
     }
 
-    private void launchBird(Bird bird) {
+    private void launchBird(Bird bird, Vector2 launchDirection) {
         if (!bird.isLaunched()) {
-            Vector2 launchForce = new Vector2(15f, 15f); // Adjust the force as needed
+            float launchForceMagnitude = launchDirection.len() * 20f; // Adjust the force multiplier as needed
+            Vector2 launchForce = launchDirection.nor().scl(launchForceMagnitude);
             bird.getBody().applyLinearImpulse(launchForce, bird.getBody().getWorldCenter(), true);
             bird.setLaunched(true);
-
-            // Enable collision with catapult after release
-            Filter filter = bird.getBody().getFixtureList().first().getFilterData();
-            filter.maskBits = Constants.MASK_BIRD;
-            bird.getBody().getFixtureList().first().setFilterData(filter);
         }
+    }
+
+    private boolean hasBirdStopped(Bird bird) {
+        float velocityThreshold = 0.05f; // Adjust this value as needed
+        return bird.getBody().getLinearVelocity().len() < velocityThreshold;
+    }
+
+    private boolean isBirdOutOfScreen(Bird bird) {
+        float birdX = bird.getBody().getPosition().x * AngryBirds.PPM;
+        float birdY = bird.getBody().getPosition().y * AngryBirds.PPM;
+        return birdX < -50 || birdX > AngryBirds.V_WIDTH+50 || birdY < -50;
+    }
+
+    private void handleCollisions() {
+        Array<GameObject> objectsToDestroy = collisionListener.getObjectsToDestroy();
+        for (GameObject gameObject : objectsToDestroy) {
+            if (gameObject instanceof Bird) {
+                Bird bird = (Bird) gameObject;
+                world.destroyBody(bird.getBody());
+            } else if (gameObject instanceof Block) {
+                Block block = (Block) gameObject;
+                world.destroyBody(block.getBody());
+            } else if (gameObject instanceof Pig) {
+                Pig pig = (Pig) gameObject;
+                world.destroyBody(pig.getBody());
+            }
+        }
+        objectsToDestroy.clear();
     }
 
     private void createGround() {
@@ -231,8 +285,8 @@ public class PlayScreen implements Screen {
 
         FixtureDef groundFixture = new FixtureDef();
         groundFixture.shape = groundShape;
-        groundFixture.friction = 0.5f;
-        groundFixture.restitution = 0.6f;
+        groundFixture.friction = 1f;
+        groundFixture.restitution = 0.3f;
 
         world.createBody(groundBodyDef).createFixture(groundFixture);
 

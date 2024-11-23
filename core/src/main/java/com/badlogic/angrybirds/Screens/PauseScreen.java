@@ -66,6 +66,15 @@ public class PauseScreen implements Screen {
                 dispose();
             }
         });
+
+        // restart button
+        restartButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(new PlayScreen(game, new Level(1)));
+                dispose();
+            }
+        });
     }
 
     @Override

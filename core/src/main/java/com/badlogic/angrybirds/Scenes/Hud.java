@@ -64,4 +64,9 @@ public class Hud {
     public void resize(int width, int height) {
         viewport.update(width, height);
     }
+
+    public void updateScore(int value) {
+        score += value;
+        scoreLabel.setText(String.format("SCORE : %06d", score));
+    }
 }

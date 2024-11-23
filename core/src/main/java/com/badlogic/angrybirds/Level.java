@@ -20,6 +20,7 @@ public class Level {
 
     private void createLevel(int level){
         switch(level){
+
             // level 1
             case 1:
                 // birds
@@ -44,6 +45,7 @@ public class Level {
                 pigs.add(new SmallPig(1080, PlayScreen.GROUND_Y_PIXELS+249));
                 break;
 
+            // level 2
             case 2:
                 // birds
                 birds.add(new RedBird(210, 125));
@@ -61,10 +63,15 @@ public class Level {
                 blocks.add(new WoodBlock(900, PlayScreen.GROUND_Y_PIXELS + 274.5f, "long", 0f));
 
                 // pigs
+                // todo: set pig coordinates correctly
                 pigs.add(new MediumPig(900, PlayScreen.GROUND_Y_PIXELS + 138));
-                pigs.add(new BigPig(900, PlayScreen.GROUND_Y_PIXELS + 336.5f));
+                pigs.add(new SmallPig(900, PlayScreen.GROUND_Y_PIXELS + 336.5f));
+                break;
 
+            // todo: level 3
+            case 3:
 
+                break;
         }}
 
     public Catapult getCatapult(){

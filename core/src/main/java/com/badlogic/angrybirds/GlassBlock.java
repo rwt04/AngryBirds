@@ -4,11 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GlassBlock extends Block {
+
     public final static float density = 2.5f;
+    private final static int MAX_HP = 25;
 
     public GlassBlock(float x, float y, String shapeType, float orientation) {
-        super(getTexture(shapeType), x, y, orientation);
-        setSquare("square".equals(shapeType));
+        super(getTexture(shapeType), x, y, orientation, MAX_HP);
+        setSquare(shapeType.equals("square"));
     }
 
     private static Texture getTexture(String shapeType) {

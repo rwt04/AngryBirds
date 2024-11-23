@@ -10,14 +10,15 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Bird extends GameObject {
 
     Body body;
+    private int damage;
     private boolean launched = false;
-
+    private Sprite sprite;
 
     public Bird(Texture texture, float x, float y) {
         super(texture, x, y);
     }
 
-    public void createBody(World world,float scaleX, float scaleY) {
+    public void createBody(World world, float scaleX, float scaleY) {
         // body definition
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -34,19 +35,21 @@ public class Bird extends GameObject {
         fdef.density = 5.0f;
         fdef.friction = 0.5f;
         fdef.restitution = 0.1f;
-//        fdef.filter.categoryBits = CATEGORY_DEFAULT;
-//        fdef.filter.maskBits = ~CATEGORY_CATAPULT;
 
         // create body
         body = world.createBody(bdef);
         body.createFixture(fdef);
 
-        Sprite sprite = new Sprite(getTexture());
+        sprite = new Sprite(getTexture());
         sprite.setSize(getTexture().getWidth() * scaleX, getTexture().getHeight() * scaleY);
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-        body.setUserData(sprite);
+        body.setUserData(this); // Set UserData to the sprite for rendering
 
         shape.dispose();
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 
     public void destroyBody(World world){
@@ -63,5 +66,13 @@ public class Bird extends GameObject {
 
     public void setLaunched(boolean launched) {
         this.launched = launched;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
     }
 }

@@ -16,11 +16,16 @@ public class Block extends GameObject {
     private Body body;
     private float density;
     protected boolean IsSquare;
+    private int HP;
+    private int maxHP;
+    Sprite sprite;
 
-    public Block(Texture texture, float x, float y, float orientation) {
+    public Block(Texture texture, float x, float y, float orientation, int maxHP) {
         super(texture, x, y);
         this.orientation = orientation;
         this.density = density;
+        this.maxHP = maxHP;
+        this.HP = maxHP;
     }
 
     public float getOrientation() {
@@ -59,13 +64,18 @@ public class Block extends GameObject {
         body = world.createBody(bdef);
         body.createFixture(fdef);
 
-        Sprite sprite = new Sprite(getTexture());
+
+        sprite = new Sprite(getTexture());
         sprite.setSize(getTexture().getWidth() * scaleX, getTexture().getHeight() * scaleY);
         sprite.setOrigin(sprite.getWidth() / 2, sprite.getHeight() / 2);
         sprite.setRotation(getOrientation()); // Set rotation for the sprite
-        body.setUserData(sprite);
+        body.setUserData(this);
 
         shape.dispose();
+    }
+
+    public Sprite getSprite() {
+        return sprite;
     }
 
     public void destroyBody(World world){
@@ -78,5 +88,33 @@ public class Block extends GameObject {
 
     public void setSquare(boolean square){
         IsSquare = square;
+    }
+
+    public int getHP() {
+        return HP;
+    }
+
+    public void setHP(int HP) {
+        this.HP = HP;
+    }
+
+    public void reduceHp(int damage) {
+        HP -= damage;
+    }
+
+    public boolean isDestroyed() {
+        return HP <= 0;
+    }
+
+    public int getDamage() {
+        return 5;
+    }
+
+    public void setMaxHP(int maxHP) {
+        this.maxHP = maxHP;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
     }
 }
