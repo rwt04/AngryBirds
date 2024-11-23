@@ -8,6 +8,7 @@ public class GlassBlock extends Block {
 
     public GlassBlock(float x, float y, String shapeType, float orientation) {
         super(getTexture(shapeType), x, y, orientation);
+        setSquare("square".equals(shapeType));
     }
 
     private static Texture getTexture(String shapeType) {

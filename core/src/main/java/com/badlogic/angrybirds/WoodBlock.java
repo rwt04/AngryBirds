@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class WoodBlock extends Block {
     public WoodBlock(float x, float y, String shapeType, float orientation) {
         super(getTexture(shapeType), x, y, orientation);
+        setSquare("square".equals(shapeType));
     }
 
     private static Texture getTexture(String shapeType) {

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 public class SteelBlock extends Block {
     public SteelBlock(float x, float y, String shapeType, float orientation) {
         super(getTexture(shapeType), x, y, orientation);
+        setSquare("square".equals(shapeType));
     }
 
     private static Texture getTexture(String shapeType) {

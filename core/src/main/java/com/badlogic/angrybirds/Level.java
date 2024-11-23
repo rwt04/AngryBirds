@@ -42,7 +42,30 @@ public class Level {
                 pigs.add(new SmallPig(808, PlayScreen.GROUND_Y_PIXELS+208));
                 pigs.add(new SmallPig(928, PlayScreen.GROUND_Y_PIXELS+208));
                 pigs.add(new SmallPig(1080, PlayScreen.GROUND_Y_PIXELS+249));
-    }}
+                break;
+
+            case 2:
+                // birds
+                birds.add(new RedBird(210, 125));
+                birds.add(new YellowBird(148, 125));
+                birds.add(new BlackBird(85, 125));
+
+                // blocks
+                blocks.add(new WoodBlock(810, PlayScreen.GROUND_Y_PIXELS, "short", 90f));
+                blocks.add(new WoodBlock(989, PlayScreen.GROUND_Y_PIXELS, "short", 90f));
+                blocks.add(new GlassBlock(900, PlayScreen.GROUND_Y_PIXELS + 97.5f , "long", 0f));
+                blocks.add(new SteelBlock(849, PlayScreen.GROUND_Y_PIXELS + 109, "short", 90f));
+                blocks.add(new SteelBlock(951, PlayScreen.GROUND_Y_PIXELS + 109, "short", 90f));
+                blocks.add(new SteelBlock(900, PlayScreen.GROUND_Y_PIXELS + 207, "medium", 0f));
+                blocks.add(new WoodBlock(900, PlayScreen.GROUND_Y_PIXELS + 219, "square", 90f));
+                blocks.add(new WoodBlock(900, PlayScreen.GROUND_Y_PIXELS + 274.5f, "long", 0f));
+
+                // pigs
+                pigs.add(new MediumPig(900, PlayScreen.GROUND_Y_PIXELS + 138));
+                pigs.add(new BigPig(900, PlayScreen.GROUND_Y_PIXELS + 336.5f));
+
+
+        }}
 
     public Catapult getCatapult(){
         return catapult;

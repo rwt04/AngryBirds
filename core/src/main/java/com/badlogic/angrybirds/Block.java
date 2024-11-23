@@ -15,6 +15,7 @@ public class Block extends GameObject {
     private float orientation;
     private Body body;
     private float density;
+    protected boolean IsSquare;
 
     public Block(Texture texture, float x, float y, float orientation) {
         super(texture, x, y);
@@ -27,6 +28,9 @@ public class Block extends GameObject {
     }
 
     public void createBody(World world, float scaleX, float scaleY) {
+        if (IsSquare){
+            scaleX = scaleY = 0.5f;
+        }
         // body definition
         BodyDef bdef = new BodyDef();
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -70,5 +74,9 @@ public class Block extends GameObject {
 
     public Body getBody(){
         return body;
+    }
+
+    public void setSquare(boolean square){
+        IsSquare = square;
     }
 }
