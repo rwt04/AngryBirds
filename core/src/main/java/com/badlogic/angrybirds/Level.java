@@ -65,12 +65,31 @@ public class Level {
                 // pigs
                 // todo: set pig coordinates correctly
                 pigs.add(new MediumPig(900, PlayScreen.GROUND_Y_PIXELS + 138));
-                pigs.add(new SmallPig(900, PlayScreen.GROUND_Y_PIXELS + 336.5f));
+                pigs.add(new SmallPig(900, PlayScreen.GROUND_Y_PIXELS + 303));
                 break;
 
             // todo: level 3
             case 3:
+                birds.add(new RedBird(210, 125));
+                birds.add(new YellowBird(148, 125));
+                birds.add(new BlackBird(85, 125));
 
+                blocks.add(new GlassBlock(1000, PlayScreen.GROUND_Y_PIXELS + 12.5f, "medium", 0f));
+                blocks.add(new GlassBlock(914, PlayScreen.GROUND_Y_PIXELS + 12.5f, "medium", 0f));
+                blocks.add(new SteelBlock(957, PlayScreen.GROUND_Y_PIXELS + 25, "short", 90f));
+                blocks.add(new SteelBlock(883.5f, PlayScreen.GROUND_Y_PIXELS + 25, "short", 90f));
+                blocks.add(new SteelBlock(1030.5f, PlayScreen.GROUND_Y_PIXELS + 25, "short", 90f));
+                blocks.add(new GlassBlock(957, PlayScreen.GROUND_Y_PIXELS + 123, "long", 0f));
+                blocks.add(new WoodBlock(883.5f, PlayScreen.GROUND_Y_PIXELS + 135, "medium", 90f));
+                blocks.add(new WoodBlock(1030.5f, PlayScreen.GROUND_Y_PIXELS + 135, "medium", 90f));
+                blocks.add(new SteelBlock(957, PlayScreen.GROUND_Y_PIXELS + 299 + 12.5f, "long", 0f));
+                blocks.add(new GlassBlock(957, PlayScreen.GROUND_Y_PIXELS + 324, "short", 90f));
+
+                pigs.add(new SmallPig(920, PlayScreen.GROUND_Y_PIXELS + 41));
+                pigs.add(new SmallPig(994, PlayScreen.GROUND_Y_PIXELS + 41));
+                pigs.add(new BigPig(957, PlayScreen.GROUND_Y_PIXELS + 135 + 51.8f));
+                pigs.add(new MediumPig(890, PlayScreen.GROUND_Y_PIXELS + 324 + 27.5f));
+                pigs.add(new MediumPig(1024, PlayScreen.GROUND_Y_PIXELS + 324 + 27.5f));
                 break;
         }}
 
