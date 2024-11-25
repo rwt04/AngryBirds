@@ -27,7 +27,7 @@ public class PauseScreen implements Screen {
 
     private Screen previousScreen;
 
-    public PauseScreen(AngryBirds game, Screen previousScreen) {
+    public PauseScreen(AngryBirds game, PlayScreen previousScreen) {
         this.game = game;
         this.previousScreen = previousScreen;
 
@@ -75,7 +75,7 @@ public class PauseScreen implements Screen {
         restartButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PlayScreen(game, new Level(1)));
+                game.setScreen(new PlayScreen(game, previousScreen.getLevel()));
                 dispose();
             }
         });

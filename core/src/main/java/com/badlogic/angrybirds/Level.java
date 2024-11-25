@@ -12,9 +12,11 @@ public class Level {
     private List<Bird> birds = new ArrayList<Bird>();
     private List<Block> blocks = new ArrayList<Block>();
     private List<Pig> pigs = new ArrayList<Pig>();
+    private int currentLevel;
 
     public Level(int level){
         catapult = new Catapult(260, PlayScreen.GROUND_Y_PIXELS);
+        currentLevel = level;
         createLevel(level);
     }
 
@@ -107,6 +109,10 @@ public class Level {
 
     public List<Pig> getPigs() {
         return pigs;
+    }
+
+    public int getCurrentLevel() {
+        return currentLevel;
     }
 }
 

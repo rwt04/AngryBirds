@@ -2,6 +2,7 @@ package com.badlogic.angrybirds.Scenes;
 
 import com.badlogic.angrybirds.AngryBirds;
 import com.badlogic.angrybirds.Screens.PauseScreen;
+import com.badlogic.angrybirds.Screens.PlayScreen;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,14 +28,14 @@ public class Hud {
     Label scoreLabel;
     private ImageButton pauseButton;
 
-    public Hud(SpriteBatch sb, final AngryBirds game, Screen playScreen) {
+    public Hud(SpriteBatch sb, final AngryBirds game, PlayScreen playScreen) {
         score = 0;
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
 
         // Load the images for the button states
-        Texture pauseUpTexture = new Texture("pause.up.png");
-        Texture pauseDownTexture = new Texture("pause.down.png");
+        Texture pauseUpTexture = new Texture("buttons/pauseup.png");
+        Texture pauseDownTexture = new Texture("buttons/pausedown.png");
 
         // Create an ImageButton using these images
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
@@ -48,7 +49,7 @@ public class Hud {
         table.setFillParent(true);
 
         scoreLabel = new Label(String.format("SCORE : %06d", score), new Label.LabelStyle(new BitmapFont(), Color.BLACK));
-        table.add(pauseButton).expandX().left().padTop(10).padLeft(10);
+        table.add(pauseButton).size(75,75).expandX().top().left().padTop(10).padLeft(10);
         table.add(scoreLabel).expandX().right().padTop(10).padRight(10);
 
         stage.addActor(table);
@@ -69,5 +70,9 @@ public class Hud {
     public void updateScore(int value) {
         score += value;
         scoreLabel.setText(String.format("SCORE : %06d", score));
+    }
+
+    public int getScore() {
+        return score;
     }
 }

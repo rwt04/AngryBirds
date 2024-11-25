@@ -16,6 +16,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayScreen implements Screen {
     public final static float GROUND_Y_PIXELS = AngryBirds.V_HEIGHT * 0.137777f;
 
@@ -105,8 +108,29 @@ public class PlayScreen implements Screen {
             setupNextBird();
         }
 
+        List<Pig> pigsToRemove = new ArrayList<>();
+        for (Pig pig : level.getPigs()) {
+            if(isPigOutOfScreen(pig)){
+                world.destroyBody(pig.getBody());
+                pigsToRemove.add(pig);
+            }
+        }
+        level.getPigs().removeAll(pigsToRemove);
+        pigsToRemove.clear();
+
         handleInput();
         handleCollisions();
+
+        if (level.getPigs().isEmpty()) {
+            game.setScreen(new WinScreen(game, hud.getScore()));
+            dispose();
+        }
+
+        // Check for lose condition
+        if (level.getBirds().isEmpty() && currentBird == null && !level.getPigs().isEmpty()) {
+            game.setScreen(new LoseScreen(game, hud.getScore()));
+            dispose();
+        }
     }
 
     @Override
@@ -251,18 +275,27 @@ public class PlayScreen implements Screen {
         float birdY = bird.getBody().getPosition().y * AngryBirds.PPM;
         return birdX < -50 || birdX > AngryBirds.V_WIDTH+50 || birdY < -50;
     }
+    private boolean isPigOutOfScreen(Pig pig) {
+        float pigX = pig.getBody().getPosition().x * AngryBirds.PPM;
+        float pigY = pig.getBody().getPosition().y * AngryBirds.PPM;
+        return pigX < -50 || pigX > AngryBirds.V_WIDTH + 50 || pigY < -50;
+    }
 
-    private void handleCollisions() {
+
+        private void handleCollisions() {
         Array<GameObject> objectsToDestroy = collisionListener.getObjectsToDestroy();
         for (GameObject gameObject : objectsToDestroy) {
             if (gameObject instanceof Bird) {
                 Bird bird = (Bird) gameObject;
+                level.getBirds().remove(bird);
                 world.destroyBody(bird.getBody());
             } else if (gameObject instanceof Block) {
                 Block block = (Block) gameObject;
+                level.getBlocks().remove(block);
                 world.destroyBody(block.getBody());
             } else if (gameObject instanceof Pig) {
                 Pig pig = (Pig) gameObject;
+                level.getPigs().remove(pig);
                 world.destroyBody(pig.getBody());
             }
         }
@@ -288,5 +321,9 @@ public class PlayScreen implements Screen {
         world.createBody(groundBodyDef).createFixture(groundFixture);
 
         groundShape.dispose();
+    }
+
+    public Level getLevel() {
+        return new Level(level.getCurrentLevel());
     }
 }
