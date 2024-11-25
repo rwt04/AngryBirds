@@ -50,24 +50,21 @@ public class PlayScreen implements Screen {
         playBG = new Texture("backgrounds/playBG.jpg");
         gamecam = new OrthographicCamera(AngryBirds.V_WIDTH / AngryBirds.PPM, AngryBirds.V_HEIGHT / AngryBirds.PPM);
         gamePort = new FitViewport(AngryBirds.V_WIDTH / AngryBirds.PPM, AngryBirds.V_HEIGHT / AngryBirds.PPM, gamecam);
-        hud = new Hud(game.batch, game);
+        hud = new Hud(game.batch, game, this);
         world = new World(new Vector2(0, -10f), true);
         b2dr = new Box2DDebugRenderer();
         drawBody = new DrawBody(world, b2dr);
         collisionListener = new CollisionListener(hud);
         world.setContactListener(collisionListener);
+        // Create ground
+        createGround();
+        // Create game objects
+        createGameObjects();
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(hud.stage);
-
-        // Create ground
-        createGround();
-
-        // Create game objects
-        createGameObjects();
-
         // Set up the first bird immediately
         setupNextBird();
     }

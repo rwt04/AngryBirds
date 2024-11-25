@@ -2,6 +2,7 @@ package com.badlogic.angrybirds.Scenes;
 
 import com.badlogic.angrybirds.AngryBirds;
 import com.badlogic.angrybirds.Screens.PauseScreen;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -26,7 +27,7 @@ public class Hud {
     Label scoreLabel;
     private ImageButton pauseButton;
 
-    public Hud(SpriteBatch sb, final AngryBirds game) {
+    public Hud(SpriteBatch sb, final AngryBirds game, Screen playScreen) {
         score = 0;
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, sb);
@@ -56,7 +57,7 @@ public class Hud {
         pauseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new PauseScreen(game));
+                game.setScreen(new PauseScreen(game, playScreen));
             }
         });
     }

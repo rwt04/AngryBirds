@@ -25,8 +25,12 @@ public class PauseScreen implements Screen {
     private Stage stage;
     private Skin skin;
 
-    public PauseScreen(AngryBirds game) {
+    private Screen previousScreen;
+
+    public PauseScreen(AngryBirds game, Screen previousScreen) {
         this.game = game;
+        this.previousScreen = previousScreen;
+
         pauseBG = new Texture("backgrounds/playBG.jpg");
         camera = new OrthographicCamera();
         viewport = new FitViewport(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT, camera);
@@ -72,6 +76,15 @@ public class PauseScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.setScreen(new PlayScreen(game, new Level(1)));
+                dispose();
+            }
+        });
+
+        // resume button
+        resumeButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                game.setScreen(previousScreen);
                 dispose();
             }
         });
