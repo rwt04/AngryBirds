@@ -5,9 +5,10 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class SteelBlock extends Block {
     private static final int MAX_HP = 80;
+    private static final float DENSITY = 7.8f;
 
     public SteelBlock(float x, float y, String shapeType, float orientation) {
-        super(getTexture(shapeType), x, y, orientation, MAX_HP);
+        super(getTexture(shapeType), x, y, orientation, MAX_HP, DENSITY);
         setSquare(shapeType.equals("square"));
     }
 

@@ -7,12 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 
-// todo: add body properties of different blocks
-//  density, friction, restitution
-//  similarly with pigs and birds
-//  add more specific block attributes
-//  like health, damage, etc.
-
 public class Block extends GameObject {
     private float orientation;
     private Body body;
@@ -22,12 +16,12 @@ public class Block extends GameObject {
     private int maxHP;
     Sprite sprite;
 
-    public Block(Texture texture, float x, float y, float orientation, int maxHP) {
+    public Block(Texture texture, float x, float y, float orientation, int maxHP, float density) {
         super(texture, x, y);
         this.orientation = orientation;
-        this.density = density;
         this.maxHP = maxHP;
         this.HP = maxHP;
+        this.density = density;
     }
 
     public float getOrientation() {
@@ -58,14 +52,13 @@ public class Block extends GameObject {
         // fixture definition
         FixtureDef fdef = new FixtureDef();
         fdef.shape = shape;
-        fdef.density = 3f;
+        fdef.density = density;
         fdef.friction = 0.5f;
         fdef.restitution = 0.1f;
 
         // create body
         body = world.createBody(bdef);
         body.createFixture(fdef);
-
 
         sprite = new Sprite(getTexture());
         sprite.setSize(getTexture().getWidth() * scaleX, getTexture().getHeight() * scaleY);
