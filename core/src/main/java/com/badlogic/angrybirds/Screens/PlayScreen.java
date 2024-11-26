@@ -48,6 +48,7 @@ public class PlayScreen implements Screen {
 
     private boolean isGameOver = false;
     private float gameOverTime = 0;
+    private float birdLaunchTime = 0;
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -101,12 +102,16 @@ public class PlayScreen implements Screen {
 
         b2dr.render(world, gamecam.combined);
 
-        // Check and remove birds that have stopped moving or gone out of the screen
-        if (currentBird != null && currentBird.isLaunched() && (hasBirdStopped(currentBird) || isBirdOutOfScreen(currentBird))) {
-            world.destroyBody(currentBird.getBody());
-            currentBird = null;
-            isBirdOnCatapult = false;
-            setupNextBird();
+
+        if (currentBird != null && currentBird.isLaunched()) {
+            birdLaunchTime += delta;
+            if (hasBirdStopped(currentBird) || isBirdOutOfScreen(currentBird) || birdLaunchTime >= 15) {
+                world.destroyBody(currentBird.getBody());
+                currentBird = null;
+                isBirdOnCatapult = false;
+                birdLaunchTime = 0;
+                setupNextBird();
+            }
         }
 
         List<Pig> pigsToRemove = new ArrayList<>();
@@ -114,6 +119,7 @@ public class PlayScreen implements Screen {
             if(isPigOutOfScreen(pig)){
                 world.destroyBody(pig.getBody());
                 pigsToRemove.add(pig);
+                hud.updateScore(pig.getMaxHP()*50);
             }
         }
         level.getPigs().removeAll(pigsToRemove);

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class SteelBlock extends Block {
-    private static final int MAX_HP = 70;
+    private static final int MAX_HP = 80;
 
     public SteelBlock(float x, float y, String shapeType, float orientation) {
         super(getTexture(shapeType), x, y, orientation, MAX_HP);

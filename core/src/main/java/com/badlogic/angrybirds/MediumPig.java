@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class MediumPig extends Pig {
 
-    private static final int MAX_HP = 60;
+    private static final int MAX_HP = 125;
 
     public MediumPig(float x, float y) {
         super(new Texture(Gdx.files.internal("gameObjects/pigs/mediumPig.png")), x, y, MAX_HP);
