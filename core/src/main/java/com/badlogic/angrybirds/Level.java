@@ -65,12 +65,10 @@ public class Level {
                 blocks.add(new WoodBlock(900, PlayScreen.GROUND_Y_PIXELS + 274.5f, "long", 0f));
 
                 // pigs
-                // todo: set pig coordinates correctly
                 pigs.add(new MediumPig(900, PlayScreen.GROUND_Y_PIXELS + 138));
                 pigs.add(new SmallPig(900, PlayScreen.GROUND_Y_PIXELS + 303));
                 break;
 
-            // todo: level 3
             case 3:
                 birds.add(new RedBird(210, 125));
                 birds.add(new YellowBird(148, 125));

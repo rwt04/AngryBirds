@@ -63,6 +63,7 @@ public class PauseScreen implements Screen {
 
         stage.addActor(table);
 
+        // main menu button
         mainMenuButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -88,6 +89,8 @@ public class PauseScreen implements Screen {
                 dispose();
             }
         });
+
+        // todo: add save and exit button
     }
 
     @Override
@@ -107,11 +110,6 @@ public class PauseScreen implements Screen {
         game.batch.draw(pauseBG, 0, 0, AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
         game.batch.setColor(1, 1, 1, 1);
         game.batch.end();
-
-        // TODO remove this and implement button actions instead
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new PlayScreen(game,new Level(1)));
-        }
 
         stage.act(delta);
         stage.draw();

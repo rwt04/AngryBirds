@@ -122,13 +122,13 @@ public class PlayScreen implements Screen {
         handleCollisions();
 
         if (level.getPigs().isEmpty()) {
-            game.setScreen(new WinScreen(game, hud.getScore()));
+            game.setScreen(new WinScreen(game, hud.getScore(), level.getCurrentLevel()));
             dispose();
         }
 
         // Check for lose condition
         if (level.getBirds().isEmpty() && currentBird == null && !level.getPigs().isEmpty()) {
-            game.setScreen(new LoseScreen(game, hud.getScore()));
+            game.setScreen(new LoseScreen(game, hud.getScore(), level.getCurrentLevel()));
             dispose();
         }
     }
