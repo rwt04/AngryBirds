@@ -1,5 +1,17 @@
 package com.badlogic.angrybirds;
 
+import com.badlogic.angrybirds.Birds.Bird;
+import com.badlogic.angrybirds.Birds.BlackBird;
+import com.badlogic.angrybirds.Birds.RedBird;
+import com.badlogic.angrybirds.Birds.YellowBird;
+import com.badlogic.angrybirds.Blocks.Block;
+import com.badlogic.angrybirds.Blocks.GlassBlock;
+import com.badlogic.angrybirds.Blocks.SteelBlock;
+import com.badlogic.angrybirds.Blocks.WoodBlock;
+import com.badlogic.angrybirds.Pigs.BigPig;
+import com.badlogic.angrybirds.Pigs.MediumPig;
+import com.badlogic.angrybirds.Pigs.Pig;
+import com.badlogic.angrybirds.Pigs.SmallPig;
 import com.badlogic.angrybirds.Screens.PlayScreen;
 
 import java.util.ArrayList;

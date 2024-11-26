@@ -1,5 +1,8 @@
 package com.badlogic.angrybirds;
 
+import com.badlogic.angrybirds.Birds.Bird;
+import com.badlogic.angrybirds.Blocks.Block;
+import com.badlogic.angrybirds.Pigs.Pig;
 import com.badlogic.angrybirds.Scenes.Hud;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;

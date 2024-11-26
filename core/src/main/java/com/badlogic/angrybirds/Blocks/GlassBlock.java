@@ -1,11 +1,10 @@
-package com.badlogic.angrybirds;
+package com.badlogic.angrybirds.Blocks;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
 public class GlassBlock extends Block {
 
-    public final static float density = 2.5f;
     private final static int MAX_HP = 40;
 
     public GlassBlock(float x, float y, String shapeType, float orientation) {

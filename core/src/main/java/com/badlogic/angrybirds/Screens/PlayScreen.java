@@ -1,6 +1,9 @@
 package com.badlogic.angrybirds.Screens;
 
 import com.badlogic.angrybirds.*;
+import com.badlogic.angrybirds.Birds.Bird;
+import com.badlogic.angrybirds.Blocks.Block;
+import com.badlogic.angrybirds.Pigs.Pig;
 import com.badlogic.angrybirds.Scenes.Hud;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

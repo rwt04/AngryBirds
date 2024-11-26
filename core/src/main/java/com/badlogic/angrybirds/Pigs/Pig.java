@@ -1,9 +1,9 @@
-package com.badlogic.angrybirds;
+package com.badlogic.angrybirds.Pigs;
 
+import com.badlogic.angrybirds.AngryBirds;
+import com.badlogic.angrybirds.GameObject;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.physics.box2d.*;
 
 public class Pig extends GameObject {

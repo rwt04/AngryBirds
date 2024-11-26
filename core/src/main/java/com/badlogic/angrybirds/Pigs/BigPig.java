@@ -1,4 +1,4 @@
-package com.badlogic.angrybirds;
+package com.badlogic.angrybirds.Pigs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
