@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-// todo: do Lose Screen
 public class LoseScreen implements Screen {
     AngryBirds game;
     Texture loseBG;

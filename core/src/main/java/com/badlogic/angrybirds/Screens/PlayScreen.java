@@ -38,7 +38,6 @@ public class PlayScreen implements Screen {
     private Box2DDebugRenderer b2dr;
     private Array<Body> worldBodies = new Array<Body>();
 
-    private DrawBody drawBody;
     private Bird currentBird;
     private boolean isBirdOnCatapult = false;
     private boolean isDragging = false;
@@ -46,6 +45,9 @@ public class PlayScreen implements Screen {
     private Vector2 maxDragDistance = new Vector2(100, 100); // Adjust as needed
 
     private CollisionListener collisionListener;
+
+    private boolean isGameOver = false;
+    private float gameOverTime = 0;
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -56,7 +58,6 @@ public class PlayScreen implements Screen {
         hud = new Hud(game.batch, game, this);
         world = new World(new Vector2(0, -10f), true);
         b2dr = new Box2DDebugRenderer();
-        drawBody = new DrawBody(world, b2dr);
         collisionListener = new CollisionListener(hud);
         world.setContactListener(collisionListener);
         // Create ground
@@ -121,17 +122,21 @@ public class PlayScreen implements Screen {
         handleInput();
         handleCollisions();
 
-        if (level.getPigs().isEmpty()) {
-            game.setScreen(new WinScreen(game, hud.getScore(), level.getCurrentLevel()));
-            dispose();
-        }
+        checkWinLose();
 
-        // Check for lose condition
-        if (level.getBirds().isEmpty() && currentBird == null && !level.getPigs().isEmpty()) {
-            game.setScreen(new LoseScreen(game, hud.getScore(), level.getCurrentLevel()));
-            dispose();
+        if (isGameOver) {
+            gameOverTime += delta;
+            if (gameOverTime >= 3) {
+                if (level.getPigs().isEmpty()) {
+                    game.setScreen(new WinScreen(game, hud.getScore(), level.getCurrentLevel()));
+                } else {
+                    game.setScreen(new LoseScreen(game, hud.getScore(), level.getCurrentLevel()));
+                }
+                dispose();
+            }
         }
     }
+
 
     @Override
     public void resize(int width, int height) {
@@ -242,6 +247,24 @@ public class PlayScreen implements Screen {
                 launchBird(currentBird, launchDirection);
                 isBirdOnCatapult = false;
             }
+        }
+    }
+
+    private void checkWinLose() {
+        if (isGameOver) {
+            return;
+        }
+
+        // Check for win condition
+        if (level.getPigs().isEmpty()) {
+            isGameOver = true;
+            gameOverTime = 0;
+        }
+
+        // Check for lose condition
+        if (level.getBirds().isEmpty() && currentBird == null && !level.getPigs().isEmpty()) {
+            isGameOver = true;
+            gameOverTime = 0;
         }
     }
 
