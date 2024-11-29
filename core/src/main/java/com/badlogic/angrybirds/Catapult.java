@@ -12,7 +12,7 @@ public class Catapult extends GameObject {
 
 
     public Catapult(float x, float y) {
-        super(new Texture(Gdx.files.internal("gameObjects/catapult.png")), x, y);
+        super(new Texture("C:\\Users\\Dhimant Kaul\\OneDrive\\Desktop\\Programing\\Rawat\\AngryBirds\\assets\\gameObjects\\catapult.png"), x, y);
     }
 
     public void createBody(World world, float scaleX, float scaleY){

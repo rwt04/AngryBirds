@@ -1,0 +1,191 @@
+{
+  "score": 1800,
+  "birds": [
+    {
+      "x": 10.055444,
+      "y": 1.9353584,
+      "angle": 12.312635,
+      "damage": 30,
+      "angularVelocity": 8.623286,
+      "inertia": 0.04437602,
+      "linearVelocityX": -2.3550236,
+      "linearVelocityY": 0.0,
+      "texture": "gameObjects/birds/redBird.png",
+      "launched": true,
+      "isCurrent": true,
+      "isOnCatapult": true
+    },
+    {
+      "x": 148.0,
+      "y": 125.0,
+      "angle": 0.0,
+      "damage": 50,
+      "angularVelocity": 0.0,
+      "inertia": 0.0,
+      "linearVelocityX": 0.0,
+      "linearVelocityY": 0.0,
+      "texture": "gameObjects/birds/yellowBird.png",
+      "launched": false,
+      "isCurrent": false,
+      "isOnCatapult": false
+    },
+    {
+      "x": 85.0,
+      "y": 125.0,
+      "angle": 0.0,
+      "damage": 80,
+      "angularVelocity": 0.0,
+      "inertia": 0.0,
+      "linearVelocityX": 0.0,
+      "linearVelocityY": 0.0,
+      "texture": "gameObjects/birds/blackBird.png",
+      "launched": false,
+      "isCurrent": false,
+      "isOnCatapult": false
+    }
+  ],
+  "blocks": [
+    {
+      "x": 14.563017,
+      "y": 2.8139107,
+      "angle": -0.27453515,
+      "hp": 35,
+      "maxHP": 60,
+      "angularVelocity": 0.09602344,
+      "inertia": 0.13029853,
+      "linearVelocityX": -0.014473265,
+      "linearVelocityY": 0.018675076,
+      "texture": "gameObjects/blocks/wood/woodShortLog.png",
+      "density": 1.2
+    },
+    {
+      "x": 16.991167,
+      "y": 2.099417,
+      "angle": 0.170768,
+      "hp": 75,
+      "maxHP": 80,
+      "angularVelocity": -0.18095833,
+      "inertia": 4.0326185,
+      "linearVelocityX": 0.09027399,
+      "linearVelocityY": -0.23742913,
+      "texture": "gameObjects/blocks/steel/steelMediumLog.png",
+      "density": 5.8
+    },
+    {
+      "x": 14.981002,
+      "y": 2.1506522,
+      "angle": 0.21141142,
+      "hp": 75,
+      "maxHP": 80,
+      "angularVelocity": 0.05182443,
+      "inertia": 4.0326185,
+      "linearVelocityX": 0.015989691,
+      "linearVelocityY": 0.067083836,
+      "texture": "gameObjects/blocks/steel/steelMediumLog.png",
+      "density": 5.8
+    },
+    {
+      "x": 19.335909,
+      "y": 2.9831536,
+      "angle": 0.89702207,
+      "hp": 45,
+      "maxHP": 60,
+      "angularVelocity": -2.142126,
+      "inertia": 0.13029853,
+      "linearVelocityX": 1.3231816,
+      "linearVelocityY": -3.3385088,
+      "texture": "gameObjects/blocks/wood/woodShortLog.png",
+      "density": 1.2
+    },
+    {
+      "x": 16.573816,
+      "y": 2.7809422,
+      "angle": -0.32684836,
+      "hp": 35,
+      "maxHP": 60,
+      "angularVelocity": -0.42748457,
+      "inertia": 0.13029853,
+      "linearVelocityX": 0.1737054,
+      "linearVelocityY": -0.03296229,
+      "texture": "gameObjects/blocks/wood/woodShortLog.png",
+      "density": 1.2
+    },
+    {
+      "x": 13.011543,
+      "y": 2.1551614,
+      "angle": 0.21489744,
+      "hp": 20,
+      "maxHP": 80,
+      "angularVelocity": -0.0026440402,
+      "inertia": 4.0326185,
+      "linearVelocityX": 8.254974E-4,
+      "linearVelocityY": -0.0034176135,
+      "texture": "gameObjects/blocks/steel/steelMediumLog.png",
+      "density": 5.8
+    },
+    {
+      "x": 19.880415,
+      "y": 2.252079,
+      "angle": 0.22299483,
+      "hp": 75,
+      "maxHP": 80,
+      "angularVelocity": -2.8188188,
+      "inertia": 8.151822,
+      "linearVelocityX": 1.7858846,
+      "linearVelocityY": -4.534311,
+      "texture": "gameObjects/blocks/steel/steelLongLog.png",
+      "density": 5.8
+    }
+  ],
+  "pigs": [
+    {
+      "x": 18.387121,
+      "y": 2.7847426,
+      "angle": 2.571856,
+      "hp": 60,
+      "maxHP": 70,
+      "angularVelocity": -3.9392402,
+      "inertia": 0.042517606,
+      "linearVelocityX": 1.3956431,
+      "linearVelocityY": -0.42877617,
+      "texture": "gameObjects/pigs/smallPig.png"
+    },
+    {
+      "x": 8.972304,
+      "y": 1.9301853,
+      "angle": 12.581976,
+      "hp": 55,
+      "maxHP": 70,
+      "angularVelocity": 8.132162,
+      "inertia": 0.042517606,
+      "linearVelocityX": -2.1880038,
+      "linearVelocityY": 0.0,
+      "texture": "gameObjects/pigs/smallPig.png"
+    },
+    {
+      "x": 15.013439,
+      "y": 3.202913,
+      "angle": 4.721025,
+      "hp": 55,
+      "maxHP": 70,
+      "angularVelocity": 0.8429428,
+      "inertia": 0.042517606,
+      "linearVelocityX": -0.25757843,
+      "linearVelocityY": 0.11456622,
+      "texture": "gameObjects/pigs/smallPig.png"
+    },
+    {
+      "x": 11.103386,
+      "y": 2.1069016,
+      "angle": 12.6532,
+      "hp": 55,
+      "maxHP": 70,
+      "angularVelocity": 11.417904,
+      "inertia": 0.042517606,
+      "linearVelocityX": -2.9823146,
+      "linearVelocityY": -2.186304,
+      "texture": "gameObjects/pigs/smallPig.png"
+    }
+  ],
+  "level": 1
+}

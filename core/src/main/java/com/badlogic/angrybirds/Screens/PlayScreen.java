@@ -129,7 +129,7 @@ public class PlayScreen implements Screen {
 
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
 
-        b2dr.render(world, gamecam.combined);
+//        b2dr.render(world, gamecam.combined);
 
 
         if (currentBird != null && currentBird.isLaunched()) {
@@ -465,7 +465,7 @@ public class PlayScreen implements Screen {
             }
         }
 
-        GameState gameState = new GameState(hud.getScore(), birdStates, blockStates, pigStates);
+        GameState gameState = new GameState(hud.getScore(), birdStates, blockStates, pigStates, level.getCurrentLevel());
         try {
             GameStateManager.saveGameState(gameState, filePath);
             Gdx.app.log("PlayScreen", "Game saved successfully.");
@@ -477,6 +477,7 @@ public class PlayScreen implements Screen {
     public void loadGame(String filePath) {
         try {
             GameState gameState = GameStateManager.loadGameState(filePath);
+            level = new Level(gameState.getLevel());
             hud.updateScore(gameState.getScore());
 
             // Clear existing game objects
