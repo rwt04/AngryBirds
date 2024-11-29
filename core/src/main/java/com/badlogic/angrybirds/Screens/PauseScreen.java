@@ -90,7 +90,16 @@ public class PauseScreen implements Screen {
             }
         });
 
-        // todo: add save and exit button
+        // save and exit button
+        saveExitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                previousScreen.saveGame("save.json");
+                game.setScreen(new MainMenuScreen(game));
+                dispose();
+            }
+        });
+
     }
 
     @Override

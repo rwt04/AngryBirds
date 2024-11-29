@@ -2,12 +2,14 @@
 package com.badlogic.angrybirds.Screens;
 
 import com.badlogic.angrybirds.AngryBirds;
+import com.badlogic.angrybirds.Level;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -15,6 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class MainMenuScreen implements Screen {
     private AngryBirds game;
@@ -26,6 +31,7 @@ public class MainMenuScreen implements Screen {
     private Skin skin;
     private Table table;
     private TextButton playButton, exitButton, loadButton;
+    private Label messageLabel;
 
     public MainMenuScreen(AngryBirds game) {
         this.game = game;
@@ -45,7 +51,9 @@ public class MainMenuScreen implements Screen {
         playButton = new TextButton("New Game", skin, "default");
         loadButton = new TextButton("Load Game", skin, "default");
         exitButton = new TextButton("Exit", skin, "default");
-
+        messageLabel = new Label("", skin, "big");
+        messageLabel.setColor(1, 0, 0, 1);
+        messageLabel.setWidth(400f);
 
         playButton.addListener(new ClickListener() {
             @Override
@@ -58,7 +66,13 @@ public class MainMenuScreen implements Screen {
         loadButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new SavedGameScreen(game));
+                if(!Files.exists(Paths.get("save.json"))){
+                    messageLabel.setText("No saved games found");
+                    return;
+                }
+                PlayScreen playScreen = new PlayScreen(game, new Level(1), true);
+                playScreen.loadGame("save.json");
+                game.setScreen(playScreen);
                 dispose();
             }
         });
@@ -81,6 +95,8 @@ public class MainMenuScreen implements Screen {
         table.add(loadButton).width(buttonWidth).padBottom(20);
         table.row();
         table.add(exitButton).width(buttonWidth);
+        table.row();
+        table.add(messageLabel).padTop(20);
 
         stage.addActor(table);
     }

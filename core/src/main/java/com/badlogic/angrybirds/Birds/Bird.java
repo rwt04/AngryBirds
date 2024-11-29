@@ -14,6 +14,8 @@ public class Bird extends GameObject {
     Body body;
     private int damage;
     private boolean launched = false;
+    private boolean isCurrentBird = false;
+    private boolean isBirdOnCatapult = false;
     private Sprite sprite;
 
     public Bird(Texture texture, float x, float y) {
@@ -76,5 +78,21 @@ public class Bird extends GameObject {
 
     public void setDamage(int damage) {
         this.damage = damage;
+    }
+
+    public boolean isCurrentBird() {
+        return isCurrentBird;
+    }
+
+    public void setCurrentBird(boolean currentBird) {
+        isCurrentBird = currentBird;
+    }
+
+    public boolean isBirdOnCatapult() {
+        return isBirdOnCatapult;
+    }
+
+    public void setBirdOnCatapult(boolean birdOnCatapult) {
+        isBirdOnCatapult = birdOnCatapult;
     }
 }

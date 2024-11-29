@@ -25,27 +25,32 @@ public class CollisionListener implements ContactListener {
             return;
         }
 
-        GameObject gameObjectA = (GameObject) fixtureA.getBody().getUserData();
-        GameObject gameObjectB = (GameObject) fixtureB.getBody().getUserData();
+        Object userDataA = fixtureA.getBody().getUserData();
+        Object userDataB = fixtureB.getBody().getUserData();
 
-        if (gameObjectA == null || gameObjectB == null) {
+        if (userDataA == null || userDataB == null) {
             return;
         }
 
-        if (gameObjectA instanceof Bird && gameObjectB instanceof Block) {
-            handleCollision((Bird) gameObjectA, (Block) gameObjectB);
-        } else if (gameObjectA instanceof Block && gameObjectB instanceof Bird) {
-            handleCollision((Bird) gameObjectB, (Block) gameObjectA);
-        } else if (gameObjectA instanceof Bird && gameObjectB instanceof Pig) {
-            handleCollision((Bird) gameObjectA, (Pig) gameObjectB);
-        } else if (gameObjectA instanceof Pig && gameObjectB instanceof Bird) {
-            handleCollision((Bird) gameObjectB, (Pig) gameObjectA);
-        } else if (gameObjectA instanceof Block && gameObjectB instanceof Pig) {
-            handleCollision((Block) gameObjectA, (Pig) gameObjectB);
-        } else if (gameObjectA instanceof Pig && gameObjectB instanceof Block) {
-            handleCollision((Block) gameObjectB, (Pig) gameObjectA);
-        } else if (gameObjectA instanceof Block && gameObjectB instanceof Block) {
-            handleCollision((Block) gameObjectA, (Block) gameObjectB);
+        if (userDataA instanceof GameObject && userDataB instanceof GameObject) {
+            GameObject gameObjectA = (GameObject) userDataA;
+            GameObject gameObjectB = (GameObject) userDataB;
+
+            if (gameObjectA instanceof Bird && gameObjectB instanceof Block) {
+                handleCollision((Bird) gameObjectA, (Block) gameObjectB);
+            } else if (gameObjectA instanceof Block && gameObjectB instanceof Bird) {
+                handleCollision((Bird) gameObjectB, (Block) gameObjectA);
+            } else if (gameObjectA instanceof Bird && gameObjectB instanceof Pig) {
+                handleCollision((Bird) gameObjectA, (Pig) gameObjectB);
+            } else if (gameObjectA instanceof Pig && gameObjectB instanceof Bird) {
+                handleCollision((Bird) gameObjectB, (Pig) gameObjectA);
+            } else if (gameObjectA instanceof Block && gameObjectB instanceof Pig) {
+                handleCollision((Block) gameObjectA, (Pig) gameObjectB);
+            } else if (gameObjectA instanceof Pig && gameObjectB instanceof Block) {
+                handleCollision((Block) gameObjectB, (Pig) gameObjectA);
+            } else if (gameObjectA instanceof Block && gameObjectB instanceof Block) {
+                handleCollision((Block) gameObjectA, (Block) gameObjectB);
+            }
         }
     }
 

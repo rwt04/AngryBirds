@@ -3,6 +3,7 @@ package com.badlogic.angrybirds.Screens;
 import com.badlogic.angrybirds.*;
 import com.badlogic.angrybirds.Birds.Bird;
 import com.badlogic.angrybirds.Blocks.Block;
+import com.badlogic.angrybirds.GameStates.*;
 import com.badlogic.angrybirds.Pigs.Pig;
 import com.badlogic.angrybirds.Scenes.Hud;
 import com.badlogic.gdx.Gdx;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,7 @@ public class PlayScreen implements Screen {
     private Array<Body> worldBodies = new Array<Body>();
 
     private Bird currentBird;
+    private Bird onScreenLoadedBird;
     private boolean isBirdOnCatapult = false;
     private boolean isDragging = false;
     private Vector2 initialTouch = new Vector2();
@@ -52,6 +55,9 @@ public class PlayScreen implements Screen {
     private boolean isGameOver = false;
     private float gameOverTime = 0;
     private float birdLaunchTime = 0;
+    private boolean loadedGame = false;
+    private float loadedBirdTime = 0;
+    private boolean checkedForLoadedBird = false;
 
     public PlayScreen(AngryBirds game, Level level) {
         this.game = game;
@@ -70,11 +76,30 @@ public class PlayScreen implements Screen {
         createGameObjects();
     }
 
+    // another constructor for loading saved game
+    public PlayScreen(AngryBirds game, Level level, boolean loadGame) {
+        this.game = game;
+        this.level = level;
+        this.loadedGame = loadGame;
+        playBG = new Texture("backgrounds/playBG.jpg");
+        gamecam = new OrthographicCamera(AngryBirds.V_WIDTH / AngryBirds.PPM, AngryBirds.V_HEIGHT / AngryBirds.PPM);
+        gamePort = new FitViewport(AngryBirds.V_WIDTH / AngryBirds.PPM, AngryBirds.V_HEIGHT / AngryBirds.PPM, gamecam);
+        hud = new Hud(game.batch, game, this);
+        world = new World(new Vector2(0, -10f), true);
+        b2dr = new Box2DDebugRenderer();
+        collisionListener = new CollisionListener(hud);
+        world.setContactListener(collisionListener);
+        // Create ground
+        createGround();
+    }
+
     @Override
     public void show() {
         Gdx.input.setInputProcessor(hud.stage);
         // Set up the first bird immediately
-        setupNextBird();
+        if(!loadedGame){
+            setupNextBird();
+        }
     }
 
     @Override
@@ -95,7 +120,8 @@ public class PlayScreen implements Screen {
         sprite.setPosition(catapult.getX(), catapult.getY());
         sprite.draw(game.batch);
 
-        drawGameObjects();
+        drawGameObjects(); // Ensure this method is called to render the textures
+
         game.batch.end();
 
         hud.stage.act(delta);
@@ -117,12 +143,22 @@ public class PlayScreen implements Screen {
             }
         }
 
+        if(loadedGame && checkedForLoadedBird){
+            loadedBirdTime += delta;
+            if (hasBirdStopped(onScreenLoadedBird) || isBirdOutOfScreen(onScreenLoadedBird) || loadedBirdTime >= 10) {
+                world.destroyBody(onScreenLoadedBird.getBody());
+                onScreenLoadedBird = null;
+                checkedForLoadedBird = false;
+                loadedBirdTime = 0;
+            }
+        }
+
         List<Pig> pigsToRemove = new ArrayList<>();
         for (Pig pig : level.getPigs()) {
-            if(isPigOutOfScreen(pig)){
+            if (isPigOutOfScreen(pig)) {
                 world.destroyBody(pig.getBody());
                 pigsToRemove.add(pig);
-                hud.updateScore(pig.getMaxHP()*50);
+                hud.updateScore(pig.getMaxHP() * 50);
             }
         }
         level.getPigs().removeAll(pigsToRemove);
@@ -187,7 +223,7 @@ public class PlayScreen implements Screen {
         world.getBodies(worldBodies);
 
         for (Body body : worldBodies) {
-            if (body.getUserData() != null){
+            if (body.getUserData() != null && body.getUserData() instanceof GameObject) {
                 Sprite sprite = null;
                 if(body.getUserData() instanceof Bird){
                     Bird bird = (Bird) body.getUserData();
@@ -280,11 +316,30 @@ public class PlayScreen implements Screen {
     private void setupNextBird() {
         if (!isBirdOnCatapult && !level.getBirds().isEmpty()) {
             currentBird = level.getBirds().remove(0);
-            currentBird.createBody(world, 0.7f, 0.7f); // Create the bird body
-            currentBird.getBody().setType(BodyDef.BodyType.KinematicBody); // Set to KinematicBody
-            currentBird.getBody().setTransform(new Vector2(level.getCatapult().getX() / AngryBirds.PPM + 0.5f,
-                level.getCatapult().getTexture().getHeight() / AngryBirds.PPM), 0);
-            isBirdOnCatapult = true;
+            currentBird.setCurrentBird(true);
+            if (!currentBird.isLaunched()) {
+                    currentBird.setCurrentBird(true);
+                    currentBird.createBody(world, 0.7f, 0.7f); // Create the bird body
+                    currentBird.getBody().setType(BodyDef.BodyType.KinematicBody); // Set to KinematicBody
+                    currentBird.getBody().setTransform(new Vector2(level.getCatapult().getX() / AngryBirds.PPM + 0.5f,
+                        level.getCatapult().getTexture().getHeight() / AngryBirds.PPM), 0);
+                    isBirdOnCatapult = true;
+                    currentBird.setBirdOnCatapult(true);
+
+            } else {
+                onScreenLoadedBird = currentBird;
+                if (!level.getBirds().isEmpty()) {
+                    currentBird = level.getBirds().remove(0);
+                    currentBird.setCurrentBird(true);
+                    currentBird.createBody(world, 0.7f, 0.7f); // Create the bird body
+                    currentBird.getBody().setType(BodyDef.BodyType.KinematicBody); // Set to KinematicBody
+                    currentBird.getBody().setTransform(new Vector2(level.getCatapult().getX() / AngryBirds.PPM + 0.5f,
+                        level.getCatapult().getTexture().getHeight() / AngryBirds.PPM), 0);
+                    isBirdOnCatapult = true;
+                    currentBird.setBirdOnCatapult(true);
+                }
+                checkedForLoadedBird = true;
+            }
         }
     }
 
@@ -314,7 +369,7 @@ public class PlayScreen implements Screen {
     }
 
 
-        private void handleCollisions() {
+    private void handleCollisions() {
         Array<GameObject> objectsToDestroy = collisionListener.getObjectsToDestroy();
         for (GameObject gameObject : objectsToDestroy) {
             if (gameObject instanceof Bird) {
@@ -350,12 +405,141 @@ public class PlayScreen implements Screen {
         groundFixture.friction = 1f;
         groundFixture.restitution = 0.3f;
 
-        world.createBody(groundBodyDef).createFixture(groundFixture);
+//        set grounds user data to "ground";
+        Body groundBody = world.createBody(groundBodyDef);
+        groundBody.createFixture(groundFixture);
+        groundBody.setUserData("ground");
 
         groundShape.dispose();
     }
 
     public Level getLevel() {
         return new Level(level.getCurrentLevel());
+    }
+
+    public void saveGame(String filePath) {
+        worldBodies = new Array<Body>();
+        world.getBodies(worldBodies);
+
+        List<BirdState> birdStates = new ArrayList<>();
+        for (Body body : worldBodies) {
+            if (body.getUserData() instanceof Bird) {
+                Bird bird = (Bird) body.getUserData();
+                birdStates.add(new BirdState(
+                    body.getPosition().x, body.getPosition().y, body.getAngle(), bird.getDamage(),
+                    body.getAngularVelocity(), body.getInertia(), body.getLinearVelocity().x, body.getLinearVelocity().y,
+                    bird.getTexture().toString(), bird.isLaunched(), bird.isCurrentBird(), bird.isBirdOnCatapult()
+                ));
+            }
+        }
+
+        // Save remaining birds that have not been launched
+        for (Bird bird : level.getBirds()) {
+            birdStates.add(new BirdState(
+                bird.getX(), bird.getY(), 0, bird.getDamage(),
+                0, 0, 0, 0, bird.getTexture().toString(), false, false, false
+            ));
+        }
+
+        List<BlockState> blockStates = new ArrayList<>();
+        for (Body body : worldBodies) {
+            if (body.getUserData() instanceof Block) {
+                Block block = (Block) body.getUserData();
+                blockStates.add(new BlockState(
+                    body.getPosition().x, body.getPosition().y, body.getAngle(), block.getHP(), block.getMaxHP(),
+                    body.getAngularVelocity(), body.getInertia(), body.getLinearVelocity().x, body.getLinearVelocity().y,
+                    block.getTexture().toString(), block.getDensity()
+                ));
+            }
+        }
+
+        List<PigState> pigStates = new ArrayList<>();
+        for (Body body : worldBodies) {
+            if (body.getUserData() instanceof Pig) {
+                Pig pig = (Pig) body.getUserData();
+                pigStates.add(new PigState(
+                    body.getPosition().x, body.getPosition().y, body.getAngle(), pig.getHP(), pig.getMaxHP(),
+                    body.getAngularVelocity(), body.getInertia(), body.getLinearVelocity().x, body.getLinearVelocity().y,
+                    pig.getTexture().toString()
+                ));
+            }
+        }
+
+        GameState gameState = new GameState(hud.getScore(), birdStates, blockStates, pigStates);
+        try {
+            GameStateManager.saveGameState(gameState, filePath);
+            Gdx.app.log("PlayScreen", "Game saved successfully.");
+        } catch (IOException e) {
+            Gdx.app.error("PlayScreen", "Failed to save game.", e);
+        }
+    }
+
+    public void loadGame(String filePath) {
+        try {
+            GameState gameState = GameStateManager.loadGameState(filePath);
+            hud.updateScore(gameState.getScore());
+
+            // Clear existing game objects
+            level.getBirds().clear();
+            level.getBlocks().clear();
+            level.getPigs().clear();
+
+            // Destroy all bodies except the ground
+            worldBodies = new Array<Body>();
+            world.getBodies(worldBodies);
+            for (Body body : worldBodies) {
+                if (!"ground".equals(body.getUserData())) {
+                    world.destroyBody(body);
+                }
+            }
+
+            // Load birds
+            List<Bird> loadedBirds = new ArrayList<>();
+            for (BirdState birdState : gameState.getBirds()) {
+                Bird bird = new Bird(new Texture(birdState.getTexture()), birdState.getX(), birdState.getY()); // Adjust as needed
+                if (birdState.isLaunched()) {
+                    bird.createBody(world, 0.7f, 0.7f);
+                    bird.getBody().setTransform(birdState.getX(), birdState.getY(), birdState.getAngle());
+                    bird.getBody().setLinearVelocity(birdState.getLinearVelocityX(), birdState.getLinearVelocityY());
+                    bird.getBody().setAngularVelocity(birdState.getAngularVelocity());
+                }
+
+                bird.setBirdOnCatapult(birdState.isOnCatapult());
+                bird.setLaunched(birdState.isLaunched());
+                bird.setCurrentBird(birdState.isCurrent());
+                bird.setDamage(birdState.getDamage());
+                loadedBirds.add(bird);
+            }
+            level.setBirds(loadedBirds);
+
+            // Load blocks
+            for (BlockState blockState : gameState.getBlocks()) {
+                Block block = new Block(new Texture(blockState.getTexture()), blockState.getX(), blockState.getY(), blockState.getAngle(), blockState.getMaxHP(), blockState.getDensity()); // Adjust as needed
+                block.createBody(world, 1f, 1f);
+                block.getBody().setTransform(blockState.getX(), blockState.getY(), blockState.getAngle());
+                block.getBody().setLinearVelocity(blockState.getLinearVelocityX(), blockState.getLinearVelocityY());
+                block.getBody().setAngularVelocity(blockState.getAngularVelocity());
+                block.setHP(blockState.getHp());
+                level.getBlocks().add(block);
+            }
+
+            // Load pigs
+            for (PigState pigState : gameState.getPigs()) {
+                Pig pig = new Pig(new Texture(pigState.getTexture()), pigState.getX(), pigState.getY(), pigState.getMaxHP()); // Adjust as needed
+                pig.createBody(world, 0.7f, 0.7f);
+                pig.getBody().setTransform(pigState.getX(), pigState.getY(), pigState.getAngle());
+                pig.getBody().setLinearVelocity(pigState.getLinearVelocityX(), pigState.getLinearVelocityY());
+                pig.getBody().setAngularVelocity(pigState.getAngularVelocity());
+                pig.setHP(pigState.getHp());
+                level.getPigs().add(pig);
+            }
+
+            // Set up the next bird on the catapult
+            setupNextBird();
+
+            Gdx.app.log("PlayScreen", "Game loaded successfully.");
+        } catch (IOException e) {
+            Gdx.app.error("PlayScreen", "Failed to load game.", e);
+        }
     }
 }

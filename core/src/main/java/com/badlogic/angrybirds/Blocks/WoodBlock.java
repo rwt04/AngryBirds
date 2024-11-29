@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class WoodBlock extends Block {
     private static final int MAX_HP = 60;
-    private static final float DENSITY = 0.5f;
+    private static final float DENSITY = 1.2f;
 
     public WoodBlock(float x, float y, String shapeType, float orientation) {
         super(getTexture(shapeType), x, y, orientation, MAX_HP, DENSITY);

@@ -109,20 +109,32 @@ public class Level {
         return catapult;
     }
 
-    public List<Bird> getBirds(){
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    public List<Bird> getBirds() {
         return birds;
+    }
+
+    public void setBirds(List<Bird> birds) {
+        this.birds = birds;
     }
 
     public List<Block> getBlocks() {
         return blocks;
     }
 
+    public void setBlocks(List<Block> blocks) {
+        this.blocks = blocks;
+    }
+
     public List<Pig> getPigs() {
         return pigs;
     }
 
-    public int getCurrentLevel() {
-        return currentLevel;
+    public void setPigs(List<Pig> pigs) {
+        this.pigs = pigs;
     }
 }
 

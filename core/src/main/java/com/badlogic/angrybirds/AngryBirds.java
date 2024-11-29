@@ -25,24 +25,6 @@ public class AngryBirds extends Game {
     @Override
     public void render() {
         super.render();
-
-        // hard coded key presses to switch screens
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            setScreen(new WinScreen(this, 0, 1));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.P)){
-            setScreen(new PlayScreen(this, new Level(1)));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.M)) {
-            setScreen(new MainMenuScreen(this));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-            setScreen(new PauseScreen(this, new PlayScreen(this, new Level(1))));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.L)){
-            setScreen(new LevelScreen(this));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            setScreen(new SplashScreen(this));
-        }else if(Gdx.input.isKeyPressed(Input.Keys.V)){
-            setScreen(new SavedGameScreen(this));
-
-        }
     }
 
     @Override

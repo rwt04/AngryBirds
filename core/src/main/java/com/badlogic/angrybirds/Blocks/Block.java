@@ -112,4 +112,8 @@ public class Block extends GameObject {
     public int getMaxHP() {
         return maxHP;
     }
+
+    public float getDensity() {
+        return density;
+    }
 }
