@@ -9,5 +9,5 @@ How to run the game:
 - Go to the directory where the repository is cloned
 - Run the following command:
 ```
-./gradlew desktop:run
+./gradlew lwjgl3:run
 ```

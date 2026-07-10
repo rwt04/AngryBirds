@@ -30,7 +30,7 @@ public class Lwjgl3Launcher {
         configuration.setWindowedMode(AngryBirds.V_WIDTH, AngryBirds.V_HEIGHT);
         configuration.setResizable(true);
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
-        configuration.setWindowIcon("AngryRedbird-128x128.png", "AngryRedbird-64x64.png", "AngryRedbird-32x32.png", "AngryRedbird-16x16.png");
+        // configuration.setWindowIcon("AngryRedbird-128x128.png", "AngryRedbird-64x64.png", "AngryRedbird-32x32.png", "AngryRedbird-16x16.png");
         return configuration;
     }
 }

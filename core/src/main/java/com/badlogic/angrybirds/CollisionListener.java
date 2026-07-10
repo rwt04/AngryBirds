@@ -91,7 +91,9 @@ public class CollisionListener implements ContactListener {
     }
 
     private void addObjectsToDestroy(GameObject go) {
-        objectsToDestroy.add(go);
+        if (!objectsToDestroy.contains(go, true)) {
+            objectsToDestroy.add(go);
+        }
     }
 
     public Array<GameObject> getObjectsToDestroy() {
