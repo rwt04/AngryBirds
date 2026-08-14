@@ -83,7 +83,5 @@ This project was developed by:
   - https://youtu.be/EJwXzmUQChg?si=NZp6AKICqe5J3wcH
   - https://youtu.be/a8MPxzkwBwo?si=fjLpfBQRt44lDDWy
 
-## License
 
-This project is intended for educational and personal use. Please check the repository for any additional licensing details before distributing or publishing it publicly.
 
